@@ -638,15 +638,11 @@
 
   .region-art {
     height: 140px;
-    display: grid;
-    place-items: center;
-    font-size: 3rem;
     position: relative;
     overflow: hidden;
   }
 
   .region-art svg.land, .region-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-  .region-art .emoji { position: relative; z-index: 2; filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.25)); }
 
   .region-art::after {
     content: "";
@@ -1635,7 +1631,6 @@
         <article class="region-card reveal">
           <div class="region-art">
             <img src="assets/region-plains.png" alt="Ветряные равнины" loading="lazy">
-            <span class="emoji" aria-hidden="true">🏞️</span>
           </div>
           <div class="region-info">
             <h3 class="region-name">Ветряные равнины</h3>
@@ -1646,7 +1641,6 @@
         <article class="region-card reveal">
           <div class="region-art">
             <img src="assets/region-cliffs.png" alt="Золотые скалы" loading="lazy">
-            <span class="emoji" aria-hidden="true">⛰️</span>
           </div>
           <div class="region-info">
             <h3 class="region-name">Золотые скалы</h3>
@@ -1657,7 +1651,6 @@
         <article class="region-card reveal">
           <div class="region-art">
             <img src="assets/region-storm.png" alt="Грозовые острова" loading="lazy">
-            <span class="emoji" aria-hidden="true">⚡</span>
           </div>
           <div class="region-info">
             <h3 class="region-name">Грозовые острова</h3>
@@ -1668,7 +1661,6 @@
         <article class="region-card reveal">
           <div class="region-art">
             <img src="assets/region-forest.png" alt="Туманные леса" loading="lazy">
-            <span class="emoji" aria-hidden="true">🌳</span>
           </div>
           <div class="region-info">
             <h3 class="region-name">Туманные леса</h3>
