@@ -542,7 +542,7 @@
     position: relative;
   }
 
-  .art-inner svg, .art-inner img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .art-inner svg, .art-inner img, .art-inner video { width: 100%; height: 100%; object-fit: cover; display: block; }
 
   @keyframes floaty {
     0%, 100% { transform: translateY(0) rotate(-1deg); }
@@ -1611,7 +1611,7 @@
         <span class="orb o3" aria-hidden="true"></span>
         <div class="art-frame">
           <div class="art-inner">
-            <img src="assets/char-akari.png" alt="Лираэль — Звёздная провидица">
+            <video src="assets/char-new1.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Анимационный ролик — Project Miku: restart"></video>
           </div>
         </div>
       </div>
@@ -1979,10 +1979,10 @@
     { name: 'Айрис', title: 'Алый щит', cls: 'Воин · Танк', element: 'pyro', rarity: 4, img: 'assets/char-iris.png', elColor: '#e25822',
       colors: { aura: '#e25822', hair: '#d94f30', hairLight: '#f08a5b', hairDark: '#a8321c', skin: '#ffe3cf', eye: '#f0a030', eyeLight: '#ffd98a', eyeDark: '#b06a10', outfit: '#ffdfd0', outfitAccent: '#e25822' },
       lore: 'Бывшая капитан королевской стражи, Айрис променяла двор на дорогу. Её щит помнит больше битв, чем летописи королевства.' },
-    { name: 'Флора', title: 'Голос рощи', cls: 'Друид · Саппорт', element: 'dendro', rarity: 5, img: 'assets/char-flora.png', elColor: '#7bb661',
+    { name: 'Флора', title: 'Голос рощи', cls: 'Друид · Саппорт', element: 'dendro', rarity: 5, img: 'assets/char-new3.png', elColor: '#7bb661',
       colors: { aura: '#7bb661', hair: '#7fbf6a', hairLight: '#b5e0a0', hairDark: '#4e8a4a', skin: '#ffe9d6', eye: '#3f9d5a', eyeLight: '#b0e8a0', eyeDark: '#1f6b38', outfit: '#eaf5e0', outfitAccent: '#7bb661' },
       lore: 'Голос древних деревьев, Флора слышит шёпот корней за сотни вёрст. Там, где она ступает, расцветают даже камни.' },
-    { name: 'Акари', title: 'Лепесток бури', cls: 'Самурай · ДД', element: 'cryo', rarity: 4, img: 'assets/char-akari.png', elColor: '#7fd4e8',
+    { name: 'Акари', title: 'Лепесток бури', cls: 'Самурай · ДД', element: 'cryo', rarity: 4, img: 'assets/char-new1.png', elColor: '#7fd4e8',
       colors: { aura: '#7fd4e8', hair: '#f7b8d0', hairLight: '#ffdce8', hairDark: '#d98aa8', skin: '#ffe9d6', eye: '#5fb8d8', eyeLight: '#c4ecf8', eyeDark: '#2a7a9a', outfit: '#fdf2f7', outfitAccent: '#7fd4e8' },
       lore: 'Странствующая воительница из восточных провинций. Её катана поёт, когда лепестки сакуры касаются лезвия.' },
     { name: 'Мяу', title: 'Двенадцать хвостов', cls: 'Маг · Контроль', element: 'electro', rarity: 4, img: 'assets/char-miau.png', elColor: '#b06fd6',
@@ -1994,7 +1994,7 @@
     { name: 'Рен', title: 'Кулак горы', cls: 'Монах · ДД', element: 'geo', rarity: 4, img: 'assets/char-ren.png', elColor: '#d4a017',
       colors: { aura: '#e8b84a', hair: '#8a6a3a', hairLight: '#b89a6a', hairDark: '#5f4526', skin: '#f0d8b8', eye: '#8a5a2a', eyeLight: '#d8b88a', eyeDark: '#4a2a0a', outfit: '#f5e8c8', outfitAccent: '#d4a017' },
       lore: 'Бывший монах Огненного Храма, Рен превратил гнев в искусство. Один его удар способен расколоть надвое гранитную глыбу.' },
-    { name: 'Арахна', title: 'Теневая пряха', cls: 'Пряха · Контроль', element: 'electro', rarity: 5, img: 'assets/char-arahna.png', elColor: '#7c3aed',
+    { name: 'Арахна', title: 'Теневая пряха', cls: 'Пряха · Контроль', element: 'electro', rarity: 5, img: 'assets/char-new2.png', elColor: '#7c3aed',
       colors: { aura: '#7c3aed', hair: '#6a4a9a', hairLight: '#9a7ac8', hairDark: '#452a6a', skin: '#f0d8e0', eye: '#7c3aed', eyeLight: '#c9aef5', eyeDark: '#3a107a', outfit: '#efe6ff', outfitAccent: '#7c3aed' },
       lore: 'Последняя из рода Тенёвых прях, Арахна плетёт сети не только из шёлка, но и из самих судеб. Её паутину не видит даже ветер.' }
   ];
