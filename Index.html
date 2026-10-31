@@ -41,8 +41,8 @@
     --blue-soft: #77b0ec;
     --grad-blue: linear-gradient(120deg, #163f8f 0%, #2f6fd6 45%, #8a63d0 100%);
     --text-fx: drop-shadow(0 2px 0 rgba(255, 255, 255, 0.85)) drop-shadow(0 3px 12px rgba(23, 72, 143, 0.38));
-    --green: #3fa66c;
-    --green-soft: #57c285;
+    --green: #2e86b8;
+    --green-soft: #6cc8ee;
     --radius: 22px;
     --font-display: 'Segoe UI', 'Arial Rounded MT Bold', 'Trebuchet MS', sans-serif;
     --font-body: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
@@ -102,24 +102,27 @@
     pointer-events: none;
   }
 
-  .petal {
+  .flake {
     position: absolute;
     top: -30px;
-    width: 13px;
-    height: 13px;
-    border-radius: 150% 0 150% 0;
-    background: radial-gradient(circle at 30% 30%, #ffd1e0, var(--pink));
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ffffff 0%, #eaf6ff 60%, #cfe8ff 100%);
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.95), 0 0 12px rgba(190, 225, 255, 0.6);
+    filter: blur(0.4px);
     opacity: 0;
-    animation: petalFall linear infinite;
+    animation: flakeFall linear infinite;
     z-index: 3;
     will-change: transform, opacity;
   }
 
-  @keyframes petalFall {
+  @keyframes flakeFall {
     0% { transform: translateY(-6vh) translateX(0) rotate(0deg); opacity: 0; }
-    10% { opacity: 0.75; }
-    85% { opacity: 0.75; }
-    100% { transform: translateY(108vh) translateX(var(--drift, 60px)) rotate(560deg); opacity: 0; }
+    8% { opacity: 0.9; }
+    45% { transform: translateY(46vh) translateX(calc(var(--drift, 30px) / 2)) rotate(180deg); }
+    88% { opacity: 0.9; }
+    100% { transform: translateY(108vh) translateX(var(--drift, 30px)) rotate(360deg); opacity: 0; }
   }
 
   /* ============================================================
@@ -330,18 +333,18 @@
   .btn-gold {
     background: linear-gradient(135deg, var(--green-soft), var(--green));
     color: #ffffff;
-    box-shadow: 0 0 24px rgba(63, 166, 108, 0.45);
+    box-shadow: 0 0 24px rgba(46, 134, 184, 0.45);
   }
 
   .btn-gold:hover, .btn-gold:focus-visible {
     transform: translateY(-2px);
-    box-shadow: 0 0 40px rgba(63, 166, 108, 0.6);
+    box-shadow: 0 0 40px rgba(46, 134, 184, 0.6);
   }
 
   .btn-teal {
     background: linear-gradient(135deg, var(--green-soft), var(--green));
     color: #ffffff;
-    box-shadow: 0 0 22px rgba(63, 166, 108, 0.4);
+    box-shadow: 0 0 22px rgba(46, 134, 184, 0.4);
   }
 
   .btn-teal:hover, .btn-teal:focus-visible { transform: translateY(-2px); }
@@ -621,6 +624,15 @@
     text-shadow: none;
   }
 
+  /* Морозное стекло: общий стиль полупрозрачных панелей */
+  .hero-badge, .countdown-item, .social-btn, .pity-chip {
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(16px) saturate(1.35);
+    -webkit-backdrop-filter: blur(16px) saturate(1.35);
+    border-color: rgba(255, 255, 255, 0.65);
+    box-shadow: 0 14px 40px rgba(70, 110, 150, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
   .glass-panel {
     background: var(--glass-strong);
     border: 1px solid var(--line);
@@ -646,6 +658,7 @@
     background: var(--glass-strong);
     border: 1px solid var(--line);
     box-shadow: var(--shadow);
+    cursor: pointer;
     transition: transform 0.35s, border-color 0.35s, box-shadow 0.35s;
   }
 
@@ -703,15 +716,13 @@
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s, border-color 0.35s;
   }
 
-  .char-card.rarity-5 { border-color: rgba(224, 168, 56, 0.8); }
-  .char-card.rarity-4 { border-color: rgba(169, 142, 224, 0.8); }
+  .char-card { border-color: var(--accent, rgba(224, 168, 56, 0.8)); }
 
   .char-card:hover, .char-card:focus-visible {
     transform: perspective(800px) rotateX(2deg) translateY(-6px);
   }
 
-  .char-card.rarity-5:hover, .char-card.rarity-5:focus-visible { box-shadow: 0 22px 50px rgba(70, 110, 150, 0.25), 0 0 38px rgba(224, 168, 56, 0.35); }
-  .char-card.rarity-4:hover, .char-card.rarity-4:focus-visible { box-shadow: 0 22px 50px rgba(70, 110, 150, 0.25), 0 0 38px rgba(169, 142, 224, 0.35); }
+  .char-card:hover, .char-card:focus-visible { box-shadow: 0 22px 50px rgba(70, 110, 150, 0.25), 0 0 38px color-mix(in srgb, var(--accent, #e0a838) 35%, transparent); }
 
   .el-badge {
     position: absolute;
@@ -742,13 +753,13 @@
   .char-art, .char-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
   .char-stars {
-    color: var(--gold);
+    color: var(--accent, var(--gold));
     letter-spacing: 3px;
     font-size: 0.9rem;
     margin-top: 12px;
   }
 
-  .rarity-4 .char-stars { color: var(--purple); }
+  .rarity-4 .char-stars { color: var(--accent, var(--purple)); }
 
   .char-name {
     font-family: var(--font-display);
@@ -780,13 +791,13 @@
   .wish-cloud {
     position: relative;
     width: 300px;
-    filter: drop-shadow(0 16px 28px rgba(70, 120, 165, 0.35));
+    filter: drop-shadow(0 16px 28px rgba(70, 120, 165, 0.35)) drop-shadow(0 0 26px rgba(120, 200, 240, 0.55));
     animation: cloudFloat 6s ease-in-out infinite;
   }
 
   @keyframes cloudFloat {
-    0%, 100% { transform: translateY(0) translateX(0); }
-    50% { transform: translateY(-18px) translateX(10px); }
+    0%, 100% { transform: translateY(0) translateX(0) rotate(-1.5deg); }
+    50% { transform: translateY(-16px) translateX(8px) rotate(1.5deg); }
   }
 
   .wish-glow {
@@ -878,16 +889,28 @@
 
   .step-card {
     position: relative;
-    padding: 30px 26px 34px;
+    padding: 36px 26px 38px;
     text-align: center;
-    background: var(--glass-strong);
-    border: 1px solid var(--line);
+    background:
+      radial-gradient(ellipse at 50% -24%, rgba(168, 216, 245, 0.28), transparent 62%),
+      radial-gradient(ellipse at 8% 108%, rgba(200, 226, 250, 0.18), transparent 52%),
+      rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(16px) saturate(1.35);
+    -webkit-backdrop-filter: blur(16px) saturate(1.35);
+    border: 1px solid rgba(255, 255, 255, 0.65);
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    transition: transform 0.35s;
+    box-shadow: 0 14px 40px rgba(70, 110, 150, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    transition: transform 0.35s, box-shadow 0.35s, background 0.35s;
   }
 
-  .step-card:hover { transform: translateY(-6px); }
+  .step-card:hover {
+    transform: translateY(-6px);
+    background:
+      radial-gradient(ellipse at 50% -24%, rgba(168, 216, 245, 0.4), transparent 62%),
+      radial-gradient(ellipse at 8% 108%, rgba(200, 226, 250, 0.24), transparent 52%),
+      rgba(255, 255, 255, 0.6);
+    box-shadow: 0 22px 48px rgba(70, 110, 150, 0.22), 0 0 30px rgba(160, 210, 245, 0.35);
+  }
 
   .step-card::before {
     counter-increment: step;
@@ -899,16 +922,29 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: var(--green);
+    background: linear-gradient(135deg, var(--green-soft), var(--green));
+    border: 3px solid rgba(255, 255, 255, 0.95);
     color: #fff;
     font-weight: 800;
     font-size: 1.05rem;
     display: grid;
     place-items: center;
-    box-shadow: 0 0 20px rgba(63, 166, 108, 0.45);
+    box-shadow: 0 0 20px rgba(46, 134, 184, 0.45);
   }
 
-  .step-icon { font-size: 2.6rem; margin-bottom: 12px; filter: drop-shadow(0 4px 10px rgba(90, 130, 165, 0.3)); }
+  .step-icon {
+    font-size: 2.2rem;
+    width: 74px;
+    height: 74px;
+    margin: 0 auto 14px;
+    display: grid;
+    place-items: center;
+    border-radius: 24px;
+    background: linear-gradient(135deg, rgba(108, 200, 238, 0.3), rgba(46, 134, 184, 0.16));
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 10px 22px rgba(70, 120, 170, 0.2);
+    filter: none;
+  }
 
   .step-title { font-family: var(--font-display); font-size: 1.15rem; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
   .step-text { font-size: 0.92rem; color: var(--ink-muted); }
@@ -923,16 +959,37 @@
   }
 
   .comm-card {
-    padding: 30px;
+    position: relative;
+    padding: 32px 30px;
     text-align: center;
-    background: var(--glass-strong);
-    border: 1px solid var(--line);
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 88% -12%, rgba(168, 216, 245, 0.3), transparent 56%),
+      rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(16px) saturate(1.35);
+    -webkit-backdrop-filter: blur(16px) saturate(1.35);
+    border: 1px solid rgba(255, 255, 255, 0.65);
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    transition: transform 0.35s, border-color 0.35s;
+    box-shadow: 0 14px 40px rgba(70, 110, 150, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    transition: transform 0.35s, box-shadow 0.35s, background 0.35s;
   }
 
-  .comm-card:hover { transform: translateY(-6px); border-color: rgba(79, 184, 201, 0.55); }
+  .comm-card:nth-child(3n+2) {
+    background:
+      radial-gradient(ellipse at 88% -12%, rgba(196, 216, 250, 0.3), transparent 56%),
+      rgba(255, 255, 255, 0.45);
+  }
+
+  .comm-card:nth-child(3n+3) {
+    background:
+      radial-gradient(ellipse at 88% -12%, rgba(205, 232, 250, 0.32), transparent 56%),
+      rgba(255, 255, 255, 0.45);
+  }
+
+  .comm-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 22px 48px rgba(70, 110, 150, 0.22), 0 0 30px rgba(160, 210, 245, 0.35);
+  }
 
   .comm-stat {
     font-family: var(--font-display);
@@ -996,7 +1053,11 @@
     transition: background 0.25s;
   }
 
-  .faq-q:hover { background: rgba(255, 255, 255, 0.6); }
+  .faq-q:hover { background: rgba(255, 255, 255, 0.22); }
+
+  .faq-item.is-open { border-color: rgba(168, 216, 245, 0.75); box-shadow: 0 14px 40px rgba(70, 110, 150, 0.18), 0 0 26px rgba(160, 210, 245, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.55); }
+
+  .faq-a { background: rgba(255, 255, 255, 0.1); }
 
   .faq-q .chev {
     flex: none;
@@ -1036,10 +1097,15 @@
     max-width: 680px;
     margin: 0 auto;
     padding: clamp(26px, 4vw, 44px);
-    background: linear-gradient(170deg, rgba(224, 168, 56, 0.14), rgba(79, 184, 201, 0.1) 60%, rgba(169, 142, 224, 0.12));
-    border: 1px solid rgba(224, 168, 56, 0.35);
+    background:
+      radial-gradient(ellipse at 85% -10%, rgba(224, 168, 56, 0.14), transparent 55%),
+      radial-gradient(ellipse at 0% 110%, rgba(168, 216, 245, 0.22), transparent 55%),
+      rgba(255, 255, 255, 0.42);
+    backdrop-filter: blur(16px) saturate(1.3);
+    -webkit-backdrop-filter: blur(16px) saturate(1.3);
+    border: 1px solid rgba(255, 255, 255, 0.7);
     border-radius: 28px;
-    box-shadow: var(--shadow);
+    box-shadow: 0 14px 40px rgba(70, 110, 150, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   }
 
   .field { margin-bottom: 18px; }
@@ -1050,12 +1116,16 @@
     width: 100%;
     padding: 13px 16px;
     border-radius: 14px;
-    border: 1px solid rgba(120, 160, 190, 0.4);
-    background: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.68);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     color: var(--ink);
     font-size: 0.95rem;
-    transition: border-color 0.25s, box-shadow 0.25s;
+    transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
   }
+
+  .field input:hover, .field select:hover { background: rgba(255, 255, 255, 0.8); }
 
   .field input:focus, .field select:focus {
     outline: none;
@@ -1102,7 +1172,7 @@
   .site-footer {
     padding: clamp(40px, 6vh, 60px) 0 28px;
     margin-top: 20px;
-    background: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-top: 1px solid rgba(255, 255, 255, 0.9);
@@ -1169,8 +1239,14 @@
   .modal-backdrop.is-open { opacity: 1; pointer-events: auto; }
 
   .modal {
-    background: linear-gradient(180deg, #ffffff 0%, #eef6fb 100%);
-    border: 1px solid rgba(224, 168, 56, 0.35);
+    background:
+      radial-gradient(ellipse at 88% -4%, color-mix(in srgb, var(--accent, #7fd4e8) 30%, transparent), transparent 58%),
+      radial-gradient(ellipse at 0% 104%, color-mix(in srgb, var(--accent, #7fd4e8) 22%, transparent), transparent 52%),
+      radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.75), transparent 70%),
+      rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(18px) saturate(1.3);
+    -webkit-backdrop-filter: blur(18px) saturate(1.3);
+    border: 1px solid color-mix(in srgb, var(--accent, #e0a838) 45%, transparent);
     border-radius: 26px;
     max-width: 520px;
     width: 100%;
@@ -1204,7 +1280,7 @@
   }
 
   .modal-close:hover, .modal-close:focus-visible {
-    background: var(--gold);
+    background: var(--accent, var(--gold));
     color: #fff;
     transform: rotate(90deg);
   }
@@ -1253,6 +1329,7 @@
     font-size: 0.95rem;
     line-height: 1.6;
     font-style: italic;
+    white-space: pre-line;
   }
 
   /* ============================================================
@@ -1284,7 +1361,7 @@
     font-size: 1.3rem;
     display: grid;
     place-items: center;
-    box-shadow: 0 0 26px rgba(63, 166, 108, 0.5);
+    box-shadow: 0 0 26px rgba(46, 134, 184, 0.5);
     opacity: 0;
     pointer-events: none;
     transform: translateY(20px);
@@ -1294,6 +1371,36 @@
 
   .scroll-top.is-visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
   .scroll-top:hover, .scroll-top:focus-visible { transform: translateY(-4px); }
+
+  /* ============================================================
+     УСИЛЕННОЕ СТЕКЛО: карточки персонажей, регионы, FAQ
+     (правила идут в конце, чтобы перекрыть базовые фоны)
+     ============================================================ */
+  .char-card, .region-card, .faq-item {
+    background:
+      linear-gradient(160deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.05) 45%, rgba(226, 242, 252, 0.12) 100%),
+      rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(24px) saturate(1.4) brightness(1.15);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4) brightness(1.15);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow:
+      0 14px 40px rgba(70, 110, 150, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      inset 0 -1px 0 rgba(200, 230, 250, 0.16);
+  }
+
+  .char-card::before, .region-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.08) 26%, transparent 44%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .char-card:hover {
+    box-shadow: 0 22px 50px rgba(70, 110, 150, 0.25), 0 0 38px color-mix(in srgb, var(--accent, #e0a838) 35%, transparent);
+  }
 
   /* ============================================================
      АДАПТИВНОСТЬ
@@ -1337,7 +1444,7 @@
       scroll-behavior: auto !important;
     }
     html { scroll-behavior: auto; }
-    .petal { display: none; }
+    .flake { display: none; }
     .reveal { opacity: 1; transform: none; }
   }
 </style>
@@ -1642,8 +1749,8 @@
     <div class="container">
       <div class="section-head reveal">
         <span class="kicker">Мир Этерии</span>
-        <h2 class="section-title" id="world-title">Четыре стихии — один мир</h2>
-        <p class="section-lead">От ветряных равнин до грозовых островов. Каждый уголок Этерии хранит тайны, данжи и легенды, ради которых стоит остаться.</p>
+        <h2 class="section-title" id="world-title">Пять стихий — один мир</h2>
+        <p class="section-lead">От ветряных равнин до грозовых островов. Каждый уголок Этерии хранит тайны, данжи и легенды, ради которых стоит остаться. Нажми на карточку, чтобы прочитать полное описание региона.</p>
       </div>
 
       <div class="regions-grid">
@@ -1726,18 +1833,36 @@
       <div class="gacha-grid">
         <div class="wish-visual reveal" aria-hidden="true">
           <div class="wish-glow"></div>
-          <svg class="wish-cloud" viewBox="0 0 300 180">
+          <svg class="wish-cloud" viewBox="0 0 300 260" role="img" aria-label="Ледяной кристалл Этерии">
             <defs>
-              <linearGradient id="clB" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="cryMain" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#f4fcff"/>
+                <stop offset="45%" stop-color="#bfe9ff"/>
+                <stop offset="100%" stop-color="#63b8e6"/>
+              </linearGradient>
+              <linearGradient id="crySide" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#d8f2ff"/>
+                <stop offset="100%" stop-color="#3e93c4"/>
+              </linearGradient>
+              <linearGradient id="cryEdge" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stop-color="#ffffff"/>
-                <stop offset="100%" stop-color="#d3ecf7"/>
+                <stop offset="100%" stop-color="#9adcf5"/>
               </linearGradient>
             </defs>
-            <ellipse cx="150" cy="120" rx="140" ry="42" fill="url(#clB)"/>
-            <ellipse cx="95" cy="88" rx="64" ry="40" fill="#ffffff"/>
-            <ellipse cx="172" cy="70" rx="54" ry="38" fill="#ffffff"/>
-            <ellipse cx="232" cy="100" rx="46" ry="30" fill="#ffffff"/>
-            <ellipse cx="150" cy="104" rx="40" ry="28" fill="#ffffff"/>
+            <g transform="translate(150 132)">
+              <path d="M0 -112 L40 -36 L26 96 L0 122 L-26 96 L-40 -36 Z" fill="url(#cryMain)"/>
+              <path d="M0 -112 L40 -36 L0 122 L-40 -36 Z" fill="url(#crySide)" opacity="0.5"/>
+              <path d="M0 -112 L0 122 L-40 -36 Z" fill="url(#cryEdge)" opacity="0.55"/>
+              <path d="M0 -112 L40 -36 L26 96 L0 122 Z" fill="url(#crySide)" opacity="0.35"/>
+              <path d="M0 -96 L14 -30 L6 84 L0 100 Z" fill="#ffffff" opacity="0.55"/>
+              <path d="M0 -112 L40 -36 L26 96 L0 122 L-26 96 L-40 -36 Z" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.85"/>
+              <path d="M-62 -6 L-46 24 L-58 78 L-76 24 Z" fill="url(#cryEdge)" opacity="0.9"/>
+              <path d="M64 10 L78 34 L68 82 L52 36 Z" fill="url(#cryEdge)" opacity="0.85"/>
+              <path d="M-92 -78 l5 13 13 5 -13 5 -5 13 -5 -13 -13 -5 13 -5 Z" fill="#ffffff" opacity="0.95"/>
+              <path d="M86 -92 l4 10 10 4 -10 4 -4 10 -4 -10 -10 -4 10 -4 Z" fill="#ffffff" opacity="0.85"/>
+              <circle cx="98" cy="-30" r="3" fill="#ffffff" opacity="0.9"/>
+              <circle cx="-102" cy="30" r="2.4" fill="#ffffff" opacity="0.8"/>
+            </g>
           </svg>
         </div>
 
@@ -2040,6 +2165,7 @@
     card.className = 'char-card rarity-' + c.rarity + ' reveal';
     card.type = 'button';
     card.dataset.idx = idx;
+    card.style.setProperty('--accent', (c.colors && c.colors.aura) || c.elColor);
     card.setAttribute('aria-label', c.name + '. ' + c.title + '. Стихия ' + elNames[c.element] + '. Класс ' + c.cls + '. Редкость ' + c.rarity + ' звёзд. Подробнее.');
     card.innerHTML =
       '<span class="el-badge" style="--el:' + c.elColor + '">' +
@@ -2062,6 +2188,7 @@
   var modalMeta = document.getElementById('modalMeta');
   var modalLore = document.getElementById('modalLore');
   var lastFocused = null;
+  var modalScrollY = 0;
 
   function openModal(idx) {
     if (!backdrop.classList.contains('is-open')) {
@@ -2070,8 +2197,12 @@
     var c = characters[idx];
     if (!c) return;
 
+    var accent = (c.colors && c.colors.aura) || c.elColor;
+    modal.style.setProperty('--accent', accent);
+
     modalArt.innerHTML = bustSvg(c);
     modalStars.textContent = new Array(c.rarity + 1).join('★');
+    modalStars.style.color = (c.colors && c.colors.aura) || c.elColor;
     modalTitle.textContent = c.name;
     modalMeta.innerHTML =
       '<span class="modal-tag">' + c.title + '</span>' +
@@ -2080,10 +2211,19 @@
       '<span class="modal-tag">' + c.rarity + '★</span>';
     modalLore.textContent = c.lore;
 
+    revealModal();
+  }
+
+  function revealModal() {
     backdrop.classList.add('is-open');
     backdrop.setAttribute('aria-hidden', 'false');
+    /* Фиксируем фон с сохранением текущей прокрутки, чтобы страница не «прыгала» вверх */
+    modalScrollY = window.scrollY;
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
+    document.body.style.top = '-' + modalScrollY + 'px';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
     document.body.style.width = '100%';
 
     requestAnimationFrame(function() { modalClose.focus(); });
@@ -2095,11 +2235,67 @@
     backdrop.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
     document.body.style.width = '';
+    window.scrollTo(0, modalScrollY);
     if (lastFocused && typeof lastFocused.focus === 'function') {
       requestAnimationFrame(function() { lastFocused.focus(); });
     }
   }
+
+  /* ================= РЕГИОНЫ: ПОЛНЫЕ ОПИСАНИЯ ================= */
+  var regions = [
+    { name: 'Ветряные равнины', img: 'assets/region-plains.png', accent: '#57b8d8',
+      type: 'Стартовая зона · уровни 1–20', element: 'Стихия: Анемо · Ветер', feature: 'Обучение, первые данжи',
+      lore: 'Ветряные равнины — колыбель каждого искателя приключений. Здесь ветер поёт в высокой траве, а древние мельницы до сих пор мелют зерно для деревень у подножия холмов. По преданию, дух ветра наделяет силой тех, кто догонит порыв за горным хребтом.\n\nЧто ждёт игрока: обучение базовым комбо, первые подземелья и тренировочные бои с дикими духами. Равнины идеально подходят, чтобы найти первую команду и почувствовать, как работает честная гача.' },
+    { name: 'Грозовые острова', img: 'assets/region-storm.png', accent: '#8a6fc0',
+      type: 'Архипелаг · уровни 40+', element: 'Стихия: Электро · Молния', feature: 'Рейды, молнии, слаженная команда',
+      lore: 'Архипелаг, где молнии танцуют над багровыми волнами. Острова соединены рухнувшими цепными мостами, а маяки гаснут каждый раз, когда приближается Буревой Левиафан. Местные жители верят, что гроза — это голос древнего кракена, спящего на дне архипелага.\n\nЧто ждёт игрока: еженедельные рейды на Левиафана, фарм электрокристаллов для оружия высшего тира и испытания, которые не пройти в одиночку. Здесь рождаются легендарные гильдии.' },
+    { name: 'Золотые скалы', img: 'assets/region-cliffs.png', accent: '#d4a017',
+      type: 'Горная зона · PvP-хаб', element: 'Стихия: Гео · Земля', feature: 'PvP-арены, аукцион гильдий',
+      lore: 'Горы, в недрах которых спят древние драконы. Золотые пики названы в честь королевских приисков: каждый камень здесь помнит алчность и величие ушедших эпох. Сегодня скалы — сердце политической жизни Этерии, где решают, кому достанутся богатства сезона.\n\nЧто ждёт игрока: рейтинг PvP-арены, аукцион гильдий и охоту за сокровищами драконьих пещер. Победителей ждут уникальные титулы и косметика, которую больше нигде не получить.' },
+    { name: 'Туманные леса', img: 'assets/region-forest.png', accent: '#5fa856',
+      type: 'Дикий край · любые уровни', element: 'Стихия: Дендро · Природа', feature: 'Секреты, скрытые боссы, ресурсы',
+      lore: 'Девственные джунгли, по которым не ходят тропы. Туман здесь живой: он прячет от глаз целые поляны, а иногда и целые города. Странники говорят, что лес сам решает, кого пустить к легендарным боссам, что дремлют в его глубинах.\n\nЧто ждёт игрока: охоту за секретами, которых не найти в гайдах, сбор редких растений для алхимии и встречи с боссами, чьи имена пока не названы даже в летописях.' },
+    { name: 'Ледяной Предел', img: 'assets/region-snow.png', accent: '#5fb6e6',
+      type: 'Высокогорная зона · уровни 40–60', element: 'Стихия: Крио · Лёд', feature: 'Древние руины, магические кристаллы, вечная зима',
+      lore: '«Ледяной Предел» — забытая земля на краю мира, где время застыло вместе с водой в реках. Когда-то здесь стоял величественный храм Лунного Света, но древняя катастрофа накрыла долину вечным холодом. Теперь лишь эхо шагов эльфийских стражей разносится среди заснеженных руин.\n\nГоворят, что в глубинах замерзшей реки спрятан «Сердце Зимы» — артефакт, способный управлять сезонами. Но добраться до него непросто: ледяные духи охраняют свои тайны, а мороз здесь настолько силен, что может сковать даже самую горячую кровь.\n\nЧто ждёт игрока: разгадка загадок древней арки, ведущей в подземелья; сбор редкого «Морозного кварца» и «Слезы Эльфа» для крафта ледяного оружия; битвы с ледяными волками, духами замерзших воинов и боссом локации — Хранительницей Метели.' }
+  ];
+
+  function openRegion(r) {
+    if (!backdrop.classList.contains('is-open')) {
+      lastFocused = document.activeElement;
+    }
+    modal.style.setProperty('--accent', r.accent);
+    modalArt.innerHTML = '<img src="' + r.img + '" alt="' + r.name + '" loading="lazy">';
+    modalStars.textContent = '';
+    modalTitle.textContent = r.name;
+    modalMeta.innerHTML =
+      '<span class="modal-tag">' + r.type + '</span>' +
+      '<span class="modal-tag">' + r.element + '</span>' +
+      '<span class="modal-tag">' + r.feature + '</span>';
+    modalLore.textContent = r.lore;
+    revealModal();
+  }
+
+  var regionCards = document.querySelectorAll('.region-card');
+  regionCards.forEach(function(card, i) {
+    var r = regions[i];
+    if (!r) return;
+    card.classList.add('is-clickable');
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', r.name + '. Открыть полное описание региона.');
+    card.addEventListener('click', function() { openRegion(r); });
+    card.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openRegion(r);
+      }
+    });
+  });
 
   charsGrid.addEventListener('click', function(e) {
     var card = e.target.closest('.char-card');
@@ -2257,18 +2453,18 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  /* ================= ЛЕПЕСТКИ ================= */
+  /* ================= СНЕЖИНКИ ================= */
   var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!prefersReduced) {
-    var petalCount = window.innerWidth < 720 ? 8 : 14;
-    for (var i = 0; i < petalCount; i++) {
+    var flakeCount = window.innerWidth < 720 ? 10 : 18;
+    for (var i = 0; i < flakeCount; i++) {
       var p = document.createElement('span');
-      p.className = 'petal';
+      p.className = 'flake';
       p.style.left = (Math.random() * 100) + '%';
-      p.style.animationDuration = (9 + Math.random() * 12) + 's';
-      p.style.animationDelay = (Math.random() * 10) + 's';
-      p.style.setProperty('--drift', ((Math.random() * 160) - 80) + 'px');
-      var size = 9 + Math.random() * 9;
+      p.style.animationDuration = (11 + Math.random() * 14) + 's';
+      p.style.animationDelay = (Math.random() * 12) + 's';
+      p.style.setProperty('--drift', ((Math.random() * 70) - 35) + 'px');
+      var size = 4 + Math.random() * 8;
       p.style.width = size + 'px';
       p.style.height = size + 'px';
       document.body.appendChild(p);
