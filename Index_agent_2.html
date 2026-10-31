@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Project Miku: restart — аниме-MMORPG в стиле Genshin Impact. Редкость не влияет на силу, побеждает мастерство.">
+<title>Project Miku: restart — Перерождение легенды</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #e0a838;
+    --gold-soft: #f4c97a;
+    --teal: #4fb8c9;
+    --teal-deep: #2e8fa0;
+    --ink: #2a2a3a;
+    --ink-muted: #3d3d4f;
+    --ink-soft: #5c5c70;
+    --glass: rgba(255, 255, 255, 0.55);
+    --glass-strong: rgba(255, 255, 255, 0.8);
+    --line: rgba(255, 255, 255, 0.85);
+    --shadow: 0 10px 40px rgba(30, 60, 80, 0.18);
+    --radius: 22px;
+    --font-display: 'Cinzel', Georgia, 'Times New Roman', serif;
+    --font-body: 'Manrope', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--ink);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  img, svg { max-width: 100%; display: block; }
+
+  :focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+
+  .container { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 32px); }
+
+  /* ============================================================
+     ПЕЙЗАЖ НА ФОНЕ: небо, солнце, облака, горы, река, трава
+     ============================================================ */
+  .landscape {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .sky {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #5fa8d3 0%, #9fd0e8 38%, #dff0e0 72%, #cde8c0 100%);
+  }
+
+  .sun {
+    position: absolute;
+    top: 7%;
+    right: 10%;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fffbe8 0%, #ffe9a8 35%, rgba(255, 233, 168, 0) 70%);
+    filter: blur(1px);
+  }
+
+  .clouds {
+    position: absolute;
+    top: 8%;
+    left: 0;
+    width: 100%;
+    animation: drift 70s linear infinite alternate;
+  }
+
+  @keyframes drift {
+    from { transform: translateX(-2%); }
+    to { transform: translateX(2%); }
+  }
+
+  .mountain { position: absolute; left: 0; width: 100%; }
+  .mountain.far { bottom: 30%; height: 55%; }
+  .mountain.mid { bottom: 16%; height: 55%; }
+  .mountain.near { bottom: 0; height: 48%; }
+
+  .grass { position: absolute; bottom: 0; left: 0; width: 100%; height: 36%; }
+  .river { position: absolute; bottom: 0; left: 0; width: 100%; height: 58%; }
+
+  .shimmer { animation: shimmer 4s ease-in-out infinite; }
+  .shimmer.delay { animation-delay: 2s; }
+
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.65; }
+  }
+
+  .landscape::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 32%, rgba(255, 255, 255, 0) 45%, rgba(20, 45, 55, 0.28) 100%);
+  }
+
+  /* ============================================================
+     ШАПКА
+     ============================================================ */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 2px 18px rgba(30, 60, 80, 0.08);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(1rem, 2.2vw, 1.3rem);
+    letter-spacing: 0.5px;
+  }
+
+  .logo-mark {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--gold-soft) 0%, var(--gold) 55%, var(--teal) 130%);
+    display: grid;
+    place-items: center;
+    font-size: 1.3rem;
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(224, 168, 56, 0.45);
+    transform: rotate(-6deg);
+  }
+
+  .logo-text {
+    background: linear-gradient(90deg, var(--ink), var(--teal-deep));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .main-nav { display: flex; gap: clamp(8px, 2vw, 24px); align-items: center; }
+
+  .nav-link {
+    font-size: clamp(0.85rem, 1.4vw, 0.95rem);
+    font-weight: 600;
+    color: var(--ink-muted);
+    padding: 8px 4px;
+    position: relative;
+    transition: color 0.3s;
+    white-space: nowrap;
+  }
+
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 2px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--teal));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .nav-link:hover, .nav-link:focus-visible { color: var(--ink); }
+  .nav-link:hover::after, .nav-link:focus-visible::after { transform: scaleX(1); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 26px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+  }
+
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold-soft) 0%, var(--gold) 100%);
+    color: #3a2a0a;
+    box-shadow: 0 6px 20px rgba(224, 168, 56, 0.45);
+  }
+
+  .btn-gold:hover, .btn-gold:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(224, 168, 56, 0.6);
+  }
+
+  .btn-ghost {
+    background: var(--glass);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    backdrop-filter: blur(10px);
+  }
+
+  .btn-ghost:hover, .btn-ghost:focus-visible {
+    background: var(--glass-strong);
+    transform: translateY(-2px);
+  }
+
+  .btn-lg { padding: 16px 38px; font-size: 1.05rem; }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero {
+    position: relative;
+    min-height: 92vh;
+    display: flex;
+    align-items: center;
+    padding: clamp(40px, 8vh, 90px) 0;
+    text-align: center;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 45%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 62%);
+    pointer-events: none;
+  }
+
+  .hero-content { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    background: var(--glass-strong);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink-muted);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+    margin-bottom: 26px;
+  }
+
+  .hero-badge .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 0 4px rgba(79, 184, 201, 0.3);
+    animation: dotPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes dotPulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(79, 184, 201, 0.3); }
+    50% { box-shadow: 0 0 0 9px rgba(79, 184, 201, 0.1); }
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 6vw, 4.2rem);
+    font-weight: 900;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    margin-bottom: 22px;
+    background: linear-gradient(135deg, #1f2a3a 0%, var(--teal-deep) 45%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 3px 14px rgba(255, 255, 255, 0.7));
+  }
+
+  .hero-subtitle {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: var(--ink-muted);
+    max-width: 660px;
+    margin: 0 auto 36px;
+    text-shadow: 0 1px 8px rgba(255, 255, 255, 0.8);
+  }
+
+  .countdown {
+    display: flex;
+    justify-content: center;
+    gap: clamp(8px, 2vw, 18px);
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+
+  .countdown-item {
+    background: var(--glass-strong);
+    border: 1px solid var(--line);
+    backdrop-filter: blur(14px);
+    border-radius: 18px;
+    padding: clamp(10px, 2vw, 16px) clamp(14px, 3vw, 24px);
+    min-width: clamp(68px, 13vw, 100px);
+    box-shadow: var(--shadow);
+    transition: transform 0.35s;
+  }
+
+  .countdown-item:hover { transform: translateY(-4px); }
+
+  .countdown-value {
+    font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    background: linear-gradient(135deg, var(--gold), var(--teal-deep));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .countdown-label {
+    font-size: clamp(0.65rem, 1.1vw, 0.8rem);
+    color: var(--ink-soft);
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+  }
+
+  .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+  /* ============================================================
+     СЕКЦИИ
+     ============================================================ */
+  section { padding: clamp(60px, 9vh, 96px) 0; position: relative; }
+
+  .section-head { text-align: center; max-width: 720px; margin: 0 auto clamp(32px, 6vh, 52px); }
+
+  .kicker {
+    display: inline-block;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--gold);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 14px;
+    color: var(--ink);
+  }
+
+  .section-lead { font-size: clamp(0.95rem, 1.6vw, 1.1rem); color: var(--ink-muted); }
+
+  .glass-panel {
+    background: var(--glass-strong);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: var(--shadow);
+  }
+
+  /* ============================================================
+     ПЕРСОНАЖИ
+     ============================================================ */
+  .characters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: clamp(16px, 2vw, 26px);
+  }
+
+  .char-card {
+    position: relative;
+    background: var(--glass-strong);
+    border: 2px solid var(--line);
+    border-radius: 24px;
+    overflow: hidden;
+    text-align: center;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s, border-color 0.35s;
+  }
+
+  .char-card.rarity-5 { border-color: var(--gold); }
+  .char-card.rarity-4 { border-color: #a98ee0; }
+
+  .char-card:hover, .char-card:focus-visible {
+    transform: perspective(800px) rotateX(2deg) translateY(-6px);
+  }
+
+  .char-card.rarity-5:hover, .char-card.rarity-5:focus-visible {
+    box-shadow: 0 22px 55px rgba(224, 168, 56, 0.4);
+  }
+
+  .char-card.rarity-4:hover, .char-card.rarity-4:focus-visible {
+    box-shadow: 0 22px 55px rgba(169, 142, 224, 0.4);
+  }
+
+  .el-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 3;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  }
+
+  .el-icon { width: 28px; height: 28px; }
+
+  .char-art-wrap {
+    position: relative;
+    height: 280px;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 55%, rgba(255, 255, 255, 0.55) 100%);
+  }
+
+  .char-art { width: 100%; height: 100%; }
+
+  .char-stars {
+    color: var(--gold);
+    letter-spacing: 4px;
+    font-size: 0.95rem;
+    margin-top: 12px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  }
+
+  .rarity-4 .char-stars { color: #a98ee0; }
+
+  .char-name {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-top: 4px;
+  }
+
+  .char-title {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    margin: 2px 0 18px;
+  }
+
+  /* ============================================================
+     МИР / РЕГИОНЫ
+     ============================================================ */
+  .regions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: clamp(16px, 2vw, 24px);
+  }
+
+  .region-card {
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--glass-strong);
+    border: 1px solid var(--line);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow);
+    transition: transform 0.35s, box-shadow 0.35s;
+  }
+
+  .region-card:hover, .region-card:focus-visible {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 45px rgba(30, 60, 80, 0.25);
+  }
+
+  .region-art {
+    height: 150px;
+    display: grid;
+    place-items: center;
+    font-size: 3.2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .region-art::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(255, 255, 255, 0.7) 100%);
+  }
+
+  .art-anemo { background: linear-gradient(160deg, #bfe8d8 0%, #7fb8a0 60%, #4e8a6a 100%); }
+  .art-geo { background: linear-gradient(160deg, #ffe9a8 0%, #e0a838 55%, #a87a1a 100%); }
+  .art-electro { background: linear-gradient(160deg, #d8c4f5 0%, #8a5fc0 55%, #4a2a7a 100%); }
+  .art-dendro { background: linear-gradient(160deg, #c8e8b8 0%, #6fae85 55%, #2f6a4a 100%); }
+
+  .region-info { padding: 18px 20px 22px; }
+
+  .region-name {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .region-desc { font-size: 0.9rem; color: var(--ink-muted); line-height: 1.55; }
+
+  /* ============================================================
+     ПОДВАЛ
+     ============================================================ */
+  .site-footer {
+    padding: clamp(36px, 5vh, 56px) 0 28px;
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line);
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 22px;
+  }
+
+  .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+
+  .footer-link { color: var(--ink-muted); font-size: 0.92rem; transition: color 0.3s; }
+  .footer-link:hover, .footer-link:focus-visible { color: var(--ink); }
+
+  .footer-copy {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+
+  .footer-disclaimer { font-style: italic; margin-top: 6px; font-size: 0.8rem; }
+
+  /* ============================================================
+     МОДАЛЬНОЕ ОКНО
+     ============================================================ */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 35, 45, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 200;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .modal-backdrop.is-open { opacity: 1; pointer-events: auto; }
+
+  .modal {
+    background: linear-gradient(180deg, #fff 0%, #fdf6e3 100%);
+    border-radius: 26px;
+    max-width: 520px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: clamp(24px, 4vw, 34px);
+    position: relative;
+    box-shadow: 0 24px 64px rgba(20, 35, 45, 0.35);
+    transform: scale(0.92) translateY(20px);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .modal-backdrop.is-open .modal { transform: scale(1) translateY(0); }
+
+  .modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--glass);
+    display: grid;
+    place-items: center;
+    font-size: 1.2rem;
+    color: var(--ink-muted);
+    transition: all 0.3s;
+    border: 1px solid var(--line);
+    z-index: 2;
+  }
+
+  .modal-close:hover, .modal-close:focus-visible {
+    background: var(--gold);
+    color: #fff;
+    transform: rotate(90deg);
+  }
+
+  .modal-art {
+    width: 220px;
+    height: 260px;
+    margin: 0 auto 14px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 12px 32px rgba(30, 60, 80, 0.2);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.6));
+  }
+
+  .modal-art svg { width: 100%; height: 100%; }
+
+  .modal-stars { text-align: center; color: var(--gold); letter-spacing: 4px; font-size: 1rem; }
+
+  .modal-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3vw, 1.7rem);
+    font-weight: 900;
+    text-align: center;
+    margin: 6px 0 4px;
+    color: var(--ink);
+  }
+
+  .modal-meta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .modal-tag {
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--line);
+    color: var(--ink-muted);
+  }
+
+  .modal-lore {
+    background: var(--glass);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 20px;
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* ============================================================
+     КНОПКА «НАВЕРХ»
+     ============================================================ */
+  .scroll-top {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    color: #3a2a0a;
+    font-size: 1.4rem;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 8px 24px rgba(224, 168, 56, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+    transition: all 0.35s;
+    z-index: 50;
+  }
+
+  .scroll-top.is-visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+  .scroll-top:hover, .scroll-top:focus-visible {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(224, 168, 56, 0.6);
+  }
+
+  /* ============================================================
+     АДАПТИВНОСТЬ
+     ============================================================ */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    html { scroll-behavior: auto; }
+  }
+
+  @media (max-width: 720px) {
+    .main-nav .nav-link { display: none; }
+    .hero { min-height: auto; padding: 48px 0 64px; }
+    .char-art-wrap { height: 240px; }
+    .scroll-top { width: 46px; height: 46px; bottom: 16px; right: 16px; }
+  }
+
+  @media (max-width: 420px) {
+    .btn-lg { padding: 14px 26px; font-size: 0.95rem; }
+    .hero-cta { flex-direction: column; width: 100%; }
+    .hero-cta .btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= ПЕЙЗАЖ НА ФОНЕ ================= -->
+<div class="landscape" aria-hidden="true">
+  <div class="sky"></div>
+  <div class="sun"></div>
+
+  <svg class="clouds" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMin slice">
+    <g fill="#ffffff" opacity="0.75">
+      <ellipse cx="200" cy="80" rx="90" ry="28"/>
+      <ellipse cx="260" cy="70" rx="60" ry="22"/>
+      <ellipse cx="150" cy="72" rx="55" ry="20"/>
+      <ellipse cx="900" cy="120" rx="110" ry="30"/>
+      <ellipse cx="980" cy="108" rx="70" ry="24"/>
+      <ellipse cx="830" cy="112" rx="60" ry="22"/>
+      <ellipse cx="1250" cy="60" rx="80" ry="24"/>
+      <ellipse cx="1310" cy="52" rx="55" ry="18"/>
+    </g>
+  </svg>
+
+  <svg class="mountain far" viewBox="0 0 1440 500" preserveAspectRatio="xMidYMax slice">
+    <defs>
+      <linearGradient id="mFar" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#b9d4e6"/>
+        <stop offset="100%" stop-color="#dcebf2"/>
+      </linearGradient>
+    </defs>
+    <path d="M0 330 L130 240 L270 310 L430 190 L580 290 L730 210 L890 300 L1040 200 L1200 290 L1330 235 L1440 310 L1440 500 L0 500 Z" fill="url(#mFar)"/>
+  </svg>
+
+  <svg class="mountain mid" viewBox="0 0 1440 500" preserveAspectRatio="xMidYMax slice">
+    <defs>
+      <linearGradient id="mMid" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#7fb8a0"/>
+        <stop offset="100%" stop-color="#a8d4b8"/>
+      </linearGradient>
+    </defs>
+    <path d="M0 400 L150 310 L310 380 L490 260 L650 370 L830 275 L1010 380 L1170 290 L1330 370 L1440 330 L1440 500 L0 500 Z" fill="url(#mMid)"/>
+    <path d="M150 310 L190 345 L150 352 L110 345 Z" fill="#f4fbf7"/>
+    <path d="M490 260 L540 305 L490 315 L440 305 Z" fill="#f4fbf7"/>
+    <path d="M830 275 L880 320 L830 330 L780 320 Z" fill="#f4fbf7"/>
+    <path d="M1170 290 L1215 330 L1170 340 L1125 330 Z" fill="#f4fbf7"/>
+  </svg>
+
+  <svg class="mountain near" viewBox="0 0 1440 500" preserveAspectRatio="xMidYMax slice">
+    <defs>
+      <linearGradient id="mNear" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#4e8a6a"/>
+        <stop offset="100%" stop-color="#6fae85"/>
+      </linearGradient>
+    </defs>
+    <path d="M0 460 L170 390 L350 450 L560 370 L760 450 L960 380 L1160 450 L1330 395 L1440 445 L1440 500 L0 500 Z" fill="url(#mNear)"/>
+  </svg>
+
+  <svg class="grass" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax slice">
+    <defs>
+      <linearGradient id="grassG" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#6fae85"/>
+        <stop offset="100%" stop-color="#3f7a5c"/>
+      </linearGradient>
+    </defs>
+    <path d="M0 120 C 200 100 400 140 600 120 C 800 100 1000 140 1200 120 C 1300 110 1400 120 1440 125 L 1440 300 L 0 300 Z" fill="url(#grassG)"/>
+    <path d="M0 175 C 250 155 500 195 750 175 C 1000 155 1250 195 1440 180 L 1440 300 L 0 300 Z" fill="#3f7a5c" opacity="0.55"/>
+  </svg>
+
+  <svg class="river" viewBox="0 0 1440 500" preserveAspectRatio="xMidYMax slice">
+    <defs>
+      <linearGradient id="riverG" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#9adcf0"/>
+        <stop offset="100%" stop-color="#4fb8c9"/>
+      </linearGradient>
+    </defs>
+    <path d="M700 0 C 730 70 660 130 680 210 C 700 290 640 380 660 500 L 800 500 C 780 380 840 290 820 210 C 800 130 870 70 840 0 Z" fill="url(#riverG)"/>
+    <path class="shimmer" d="M700 0 C 730 70 660 130 680 210 C 700 290 640 380 660 500" stroke="#ffffff" stroke-width="3" fill="none" opacity="0.5"/>
+    <path class="shimmer delay" d="M740 0 C 770 70 700 130 720 210 C 740 290 680 380 700 500" stroke="#ffffff" stroke-width="2" fill="none" opacity="0.35"/>
+  </svg>
+</div>
+
+<!-- ================= SVG-СИМВОЛЫ ================= -->
+<svg class="svg-defs" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <defs>
+    <!-- Портрет персонажа (бюст) -->
+    <symbol id="bust" viewBox="0 0 240 300">
+      <circle cx="120" cy="150" r="118" fill="var(--aura)" opacity="0.5"/>
+      <circle cx="120" cy="150" r="100" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.5"/>
+      <circle cx="120" cy="150" r="86" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1" stroke-dasharray="3 7"/>
+      <path d="M120 34 C 58 34 36 108 42 196 C 46 252 74 272 120 274 C 166 272 194 252 198 196 C 204 108 182 34 120 34 Z" fill="var(--hair-dark)"/>
+      <path d="M34 300 C 40 252 78 236 120 236 C 162 236 200 252 206 300 Z" fill="var(--outfit)"/>
+      <path d="M96 240 L 120 268 L 144 240 C 136 232 104 232 96 240 Z" fill="var(--outfit-accent)"/>
+      <path d="M108 152 L 132 152 L 130 196 C 128 202 112 202 110 196 Z" fill="var(--skin)"/>
+      <ellipse cx="120" cy="122" rx="37" ry="43" fill="var(--skin)"/>
+      <ellipse cx="83" cy="128" rx="7" ry="11" fill="var(--skin)"/>
+      <ellipse cx="157" cy="128" rx="7" ry="11" fill="var(--skin)"/>
+      <path d="M120 58 C 88 58 76 92 78 132 C 79 152 88 164 100 170 C 96 146 100 124 110 112 C 120 102 130 102 140 112 C 150 124 154 146 150 170 C 162 164 171 152 172 132 C 174 92 152 58 120 58 Z" fill="var(--hair)"/>
+      <path d="M80 118 C 88 92 104 82 120 82 C 136 82 152 92 160 118 C 152 98 136 90 120 90 C 104 90 88 98 80 118 Z" fill="var(--hair-light)"/>
+      <ellipse cx="103" cy="130" rx="8.5" ry="10.5" fill="#fff"/>
+      <ellipse cx="137" cy="130" rx="8.5" ry="10.5" fill="#fff"/>
+      <ellipse cx="104" cy="131" rx="5.5" ry="7.5" fill="var(--eye)"/>
+      <ellipse cx="136" cy="131" rx="5.5" ry="7.5" fill="var(--eye)"/>
+      <circle cx="106.5" cy="127.5" r="2.2" fill="#fff"/>
+      <circle cx="138.5" cy="127.5" r="2.2" fill="#fff"/>
+      <path d="M94 116 Q 103 111 112 115" stroke="var(--hair-dark)" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <path d="M128 115 Q 137 111 146 116" stroke="var(--hair-dark)" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <ellipse cx="95" cy="144" rx="7" ry="4" fill="rgba(255,120,140,0.35)"/>
+      <ellipse cx="145" cy="144" rx="7" ry="4" fill="rgba(255,120,140,0.35)"/>
+      <path d="M114 152 Q 120 157 126 152" stroke="#c96a6a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M58 58 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3 Z" fill="#fff" opacity="0.85"/>
+      <path d="M180 78 l2.5 6.5 6.5 2.5 -6.5 2.5 -2.5 6.5 -2.5 -6.5 -6.5 -2.5 6.5 -2.5 Z" fill="#fff" opacity="0.6"/>
+    </symbol>
+
+    <!-- Иконки стихий -->
+    <symbol id="el-anemo" viewBox="0 0 24 24">
+      <path d="M12 1.8 L22.2 12 L12 22.2 L1.8 12 Z" fill="var(--el)"/>
+      <path d="M12 5.4 L18.6 12 L12 18.6 L5.4 12 Z" fill="#fff" opacity="0.92"/>
+      <path d="M12 12m-3.2 0a3.2 3.2 0 1 1 3.2 3.2" stroke="var(--el)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="el-pyro" viewBox="0 0 24 24">
+      <path d="M12 1.8 L22.2 12 L12 22.2 L1.8 12 Z" fill="var(--el)"/>
+      <path d="M12 5.4 L18.6 12 L12 18.6 L5.4 12 Z" fill="#fff" opacity="0.92"/>
+      <path d="M12 7.2c2.2 2.2 3.4 3.9 3.4 5.6a3.4 3.4 0 0 1-6.8 0c0-1 .5-2 1.3-3 .2.9.7 1.5 1.3 1.9.1-1.5.4-2.9.8-4.5z" fill="var(--el)"/>
+    </symbol>
+    <symbol id="el-hydro" viewBox="0 0 24 24">
+      <path d="M12 1.8 L22.2 12 L12 22.2 L1.8 12 Z" fill="var(--el)"/>
+      <path d="M12 5.4 L18.6 12 L12 18.6 L5.4 12 Z" fill="#fff" opacity="0.92"/>
+      <path d="M12 7.4c2.4 2.7 3.6 4.6 3.6 6.2a3.6 3.6 0 0 1-7.2 0c0-1.6 1.2-3.5 3.6-6.2z" fill="var(--el)"/>
+    </symbol>
+    <symbol id="el-electro" viewBox="0 0 24 24">
+      <path d="M12 1.8 L22.2 12 L12 22.2 L1.8 12 Z" fill="var(--el)"/>
+      <path d="M12 5.4 L18.6 12 L12 18.6 L5.4 12 Z" fill="#fff" opacity="0.92"/>
+      <path d="M13.4 6.2 8.8 12.6h2.6l-1 5.2 4.8-6.4h-2.6z" fill="var(--el)"/>
+    </symbol>
+    <symbol id="el-dendro" viewBox="0 0 24 24">
+      <path d="M12 1.8 L22.2 12 L12 22.2 L1.8 12 Z" fill="var(--el)"/>
+      <path d="M12 5.4 L18.6 12 L12 18.6 L5.4 12 Z" fill="#fff" opacity="0.92"/>
+      <path d="M7 17.2C7.4 11.6 10.2 7.8 17 7.2c.6 6.8-2.2 9.6-8.8 10-1 .1-1.6-.1-1.2 0z" fill="var(--el)"/>
+      <path d="M7 17.2 11.8 12.4" stroke="var(--el)" stroke-width="1.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="el-cryo" viewBox="0 0 24 24">
+      <path d="M12 1.8 L22.2 12 L12 22.2 L1.8 12 Z" fill="var(--el)"/>
+      <path d="M12 5.4 L18.6 12 L12 18.6 L5.4 12 Z" fill="#fff" opacity="0.92"/>
+      <path d="M12 7.4v9.2M7.4 12h9.2M8.7 8.7l6.6 6.6M15.3 8.7l-6.6 6.6" stroke="var(--el)" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="el-geo" viewBox="0 0 24 24">
+      <path d="M12 1.8 L22.2 12 L12 22.2 L1.8 12 Z" fill="var(--el)"/>
+      <path d="M12 5.4 L18.6 12 L12 18.6 L5.4 12 Z" fill="#fff" opacity="0.92"/>
+      <path d="M12 7.6l4.4 4.4-4.4 4.4-4.4-4.4z" fill="var(--el)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ================= ШАПКА ================= -->
+<header class="site-header" role="banner">
+  <div class="container header-inner">
+    <a href="#top" class="logo" aria-label="Project Miku: restart — на главную">
+      <span class="logo-mark" aria-hidden="true">✦</span>
+      <span class="logo-text">Project Miku: restart</span>
+    </a>
+    <nav class="main-nav" aria-label="Основная навигация">
+      <a href="#characters" class="nav-link">Герои</a>
+      <a href="#world" class="nav-link">Мир</a>
+      <a href="#register" class="btn btn-gold">Войти</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero-content">
+      <div class="hero-badge">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Открытый бета-тест скоро</span>
+      </div>
+      <h1 class="hero-title" id="hero-title">Перерождение легенды.<br>Честная гача. Твой мир.</h1>
+      <p class="hero-subtitle">Аниме-MMORPG, в которой редкость персонажа — это лишь визуальный стиль. Сила зависит от мастерства, стратегии и друзей, с которыми ты идёшь в бой.</p>
+
+      <div class="countdown" role="timer" aria-live="polite" aria-atomic="true" aria-label="Обратный отсчёт до начала ОБТ">
+        <div class="countdown-item">
+          <div class="countdown-value" id="cd-days">00</div>
+          <div class="countdown-label">Дней</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-value" id="cd-hours">00</div>
+          <div class="countdown-label">Часов</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-value" id="cd-minutes">00</div>
+          <div class="countdown-label">Минут</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-value" id="cd-seconds">00</div>
+          <div class="countdown-label">Секунд</div>
+        </div>
+      </div>
+
+      <div class="hero-cta">
+        <a href="#register" class="btn btn-gold btn-lg" id="register">Зарегистрироваться на ОБТ</a>
+        <a href="#characters" class="btn btn-ghost btn-lg">Познакомиться с героями</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ПЕРСОНАЖИ ================= -->
+  <section id="characters" aria-labelledby="chars-title">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Герои Этерии</span>
+        <h2 class="section-title" id="chars-title">Выбери того, чья история отзовётся в твоём сердце</h2>
+        <p class="section-lead">Восемь стартовых героев — у каждого своя стихия, свой путь и своя легенда. Нажми на карточку, чтобы узнать больше.</p>
+      </div>
+      <div class="characters-grid" id="charsGrid">
+        <!-- Карточки вставляются JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= МИР ================= -->
+  <section id="world" aria-labelledby="world-title">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Мир Этерии</span>
+        <h2 class="section-title" id="world-title">Четыре стихии — один мир</h2>
+        <p class="section-lead">От ветряных равнин до грозовых островов — каждый уголок мира хранит свои тайны, опасности и легенды.</p>
+      </div>
+
+      <div class="regions-grid">
+        <article class="region-card" tabindex="0">
+          <div class="region-art art-anemo" aria-hidden="true">🏞️</div>
+          <div class="region-info">
+            <h3 class="region-name">Ветряные равнины</h3>
+            <p class="region-desc">Бескрайние зелёные луга, где ветер поёт в травах, а древние мельницы вращаются под музыку небес.</p>
+          </div>
+        </article>
+
+        <article class="region-card" tabindex="0">
+          <div class="region-art art-geo" aria-hidden="true">⛰️</div>
+          <div class="region-info">
+            <h3 class="region-name">Золотые скалы</h3>
+            <p class="region-desc">Величественные горы, в недрах которых спят древние драконы и мерцают жилы чистейшего золота.</p>
+          </div>
+        </article>
+
+        <article class="region-card" tabindex="0">
+          <div class="region-art art-electro" aria-hidden="true">⚡</div>
+          <div class="region-info">
+            <h3 class="region-name">Грозовые острова</h3>
+            <p class="region-desc">Архипелаг, где молнии танцуют над багровыми деревьями, а каждый гром — голос древнего бога.</p>
+          </div>
+        </article>
+
+        <article class="region-card" tabindex="0">
+          <div class="region-art art-dendro" aria-hidden="true">🌳</div>
+          <div class="region-info">
+            <h3 class="region-name">Туманные леса</h3>
+            <p class="region-desc">Девственные джунгли, где корни деревьев сплелись с руинами забытых цивилизаций и шёпотом духов.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ================= ПОДВАЛ ================= -->
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="logo">
+        <span class="logo-mark" aria-hidden="true">✦</span>
+        <span class="logo-text">Project Miku: restart</span>
+      </div>
+      <nav class="footer-links" aria-label="Ссылки в подвале">
+        <a href="#" class="footer-link">Discord</a>
+        <a href="#" class="footer-link">Новости</a>
+        <a href="#" class="footer-link">Поддержка</a>
+        <a href="#" class="footer-link">Правила</a>
+      </nav>
+    </div>
+    <div class="footer-copy">
+      <div>© 2026 Project Miku: restart. Все права вымышлены.</div>
+      <div class="footer-disclaimer">Демонстрационный проект. Все права вымышлены.</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= МОДАЛЬНОЕ ОКНО ================= -->
+<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modalClose" aria-label="Закрыть окно">✕</button>
+    <div class="modal-art" id="modalArt" aria-hidden="true"></div>
+    <div class="modal-stars" id="modalStars" aria-hidden="true"></div>
+    <h3 class="modal-name" id="modal-title"></h3>
+    <div class="modal-meta" id="modalMeta"></div>
+    <div class="modal-lore" id="modalLore"></div>
+  </div>
+</div>
+
+<!-- ================= КНОПКА «НАВЕРХ» ================= -->
+<button class="scroll-top" id="scrollTop" aria-label="Вернуться наверх">↑</button>
+
+<script>
+(function() {
+  'use strict';
+
+  // ===== ДАННЫЕ ПЕРСОНАЖЕЙ =====
+  const elIcons = {
+    anemo: '#el-anemo',
+    pyro: '#el-pyro',
+    hydro: '#el-hydro',
+    electro: '#el-electro',
+    dendro: '#el-dendro',
+    cryo: '#el-cryo',
+    geo: '#el-geo'
+  };
+
+  const elNames = {
+    anemo: 'Анемо · Ветер',
+    pyro: 'Пиро · Огонь',
+    hydro: 'Гидро · Вода',
+    electro: 'Электро · Молния',
+    dendro: 'Дендро · Природа',
+    cryo: 'Крио · Лёд',
+    geo: 'Гео · Земля'
+  };
+
+  const characters = [
+    {
+      name: 'Лираэль', title: 'Звёздная провидица', element: 'anemo', rarity: 5, elColor: '#1fa2a2',
+      colors: { aura: '#1fa2a2', hair: '#e8e4f5', hairDark: '#b9aed8', hairLight: '#f7f5ff', skin: '#ffe9d6', eye: '#2bb3b3', outfit: '#f2f4ff', outfitAccent: '#1fa2a2' },
+      lore: 'Последняя ученица Звёздной Академии, Лираэль плетёт заклинания из света созвездий. Говорят, она может прочитать судьбу в отражении лунного диска.'
+    },
+    {
+      name: 'Айрис', title: 'Алый щит', element: 'pyro', rarity: 4, elColor: '#e25822',
+      colors: { aura: '#e25822', hair: '#d94f30', hairDark: '#a8321c', hairLight: '#f08a5b', skin: '#ffe3cf', eye: '#f0a030', outfit: '#e25822', outfitAccent: '#f4c97a' },
+      lore: 'Бывшая капитан королевской стражи, Айрис променяла двор на дорогу. Её щит помнит больше битв, чем летописи королевства.'
+    },
+    {
+      name: 'Флора', title: 'Голос рощи', element: 'dendro', rarity: 5, elColor: '#7bb661',
+      colors: { aura: '#7bb661', hair: '#7fbf6a', hairDark: '#4e8a4a', hairLight: '#b5e0a0', skin: '#ffe9d6', eye: '#3f9d5a', outfit: '#eaf5e0', outfitAccent: '#7bb661' },
+      lore: 'Голос древних деревьев, Флора слышит шёпот корней за сотни вёрст. Там, где она ступает, расцветают даже камни.'
+    },
+    {
+      name: 'Акари', title: 'Лепесток бури', element: 'cryo', rarity: 4, elColor: '#7fd4e8',
+      colors: { aura: '#7fd4e8', hair: '#f7b8d0', hairDark: '#d98aa8', hairLight: '#ffdce8', skin: '#ffe9d6', eye: '#5fb8d8', outfit: '#fdf2f7', outfitAccent: '#7fd4e8' },
+      lore: 'Странствующая воительница из восточных провинций. Её катана поёт, когда лепестки сакуры касаются лезвия.'
+    },
+    {
+      name: 'Мяу', title: 'Двенадцать хвостов', element: 'electro', rarity: 4, elColor: '#b06fd6',
+      colors: { aura: '#b06fd6', hair: '#f0a030', hairDark: '#c47a1a', hairLight: '#ffd98a', skin: '#ffe9d6', eye: '#b06fd6', outfit: '#fff3d6', outfitAccent: '#b06fd6' },
+      lore: 'Маленькая волшебница, которую всюду сопровождает свита из двенадцати говорящих котов. Каждый из них — отдельная стихия.'
+    },
+    {
+      name: 'Сора', title: 'Странник дождя', element: 'hydro', rarity: 4, elColor: '#3b7dd8',
+      colors: { aura: '#3b7dd8', hair: '#5b8fd8', hairDark: '#3a5fa8', hairLight: '#9cc0f0', skin: '#ffe9d6', eye: '#2a5fc0', outfit: '#eaf2ff', outfitAccent: '#3b7dd8' },
+      lore: 'Таинственный странник с волшебным зонтом, который укрывает не только от дождя, но и от злых чар. Его прошлое окутано туманом.'
+    },
+    {
+      name: 'Рен', title: 'Кулак горы', element: 'geo', rarity: 4, elColor: '#d4a017',
+      colors: { aura: '#d4a017', hair: '#8a6a3a', hairDark: '#5f4526', hairLight: '#b89a6a', skin: '#f0d8b8', eye: '#8a5a2a', outfit: '#f5e8c8', outfitAccent: '#d4a017' },
+      lore: 'Бывший монах Огненного Храма, Рен превратил гнев в искусство. Один его удар способен расколоть надвое гранитную глыбу.'
+    },
+    {
+      name: 'Арахна', title: 'Теневая пряха', element: 'electro', rarity: 5, elColor: '#7c3aed',
+      colors: { aura: '#7c3aed', hair: '#6a4a9a', hairDark: '#452a6a', hairLight: '#9a7ac8', skin: '#f0d8e0', eye: '#7c3aed', outfit: '#efe6ff', outfitAccent: '#7c3aed' },
+      lore: 'Последняя из рода Тенёвых прях, Арахна плетёт сети не только из шёлка, но и из самих судеб. Её паутину не видит даже ветер.'
+    }
+  ];
+
+  // ===== РЕНДЕР КАРТОЧЕК =====
+  const charsGrid = document.getElementById('charsGrid');
+
+  function bustSvg(c) {
+    return '<svg class="char-art" viewBox="0 0 240 300" style="--aura:' + c.elColor +
+      ';--hair:' + c.colors.hair + ';--hair-dark:' + c.colors.hairDark +
+      ';--hair-light:' + c.colors.hairLight + ';--skin:' + c.colors.skin +
+      ';--eye:' + c.colors.eye + ';--outfit:' + c.colors.outfit +
+      ';--outfit-accent:' + c.colors.outfitAccent + '" aria-hidden="true"><use href="#bust"/></svg>';
+  }
+
+  characters.forEach((c, idx) => {
+    const card = document.createElement('button');
+    card.className = 'char-card rarity-' + c.rarity;
+    card.type = 'button';
+    card.dataset.idx = idx;
+    card.setAttribute('aria-label', c.name + ', ' + c.title + ', стихия ' + elNames[c.element] + ', редкость ' + c.rarity + ' звёзд. Подробнее');
+    card.innerHTML =
+      '<span class="el-badge" style="--el:' + c.elColor + '">' +
+        '<svg class="el-icon" aria-hidden="true"><use href="' + elIcons[c.element] + '"/></svg>' +
+      '</span>' +
+      '<div class="char-art-wrap">' + bustSvg(c) + '</div>' +
+      '<div class="char-stars" aria-hidden="true">' + '★'.repeat(c.rarity) + '</div>' +
+      '<div class="char-name">' + c.name + '</div>' +
+      '<div class="char-title">' + c.title + '</div>';
+    charsGrid.appendChild(card);
+  });
+
+  // ===== МОДАЛЬНОЕ ОКНО =====
+  const backdrop = document.getElementById('modalBackdrop');
+  const modal = document.getElementById('modal');
+  const modalClose = document.getElementById('modalClose');
+  const modalArt = document.getElementById('modalArt');
+  const modalStars = document.getElementById('modalStars');
+  const modalTitle = document.getElementById('modal-title');
+  const modalMeta = document.getElementById('modalMeta');
+  const modalLore = document.getElementById('modalLore');
+
+  let lastFocused = null;
+
+  function openModal(idx) {
+    const c = characters[idx];
+    if (!c) return;
+    lastFocused = document.activeElement;
+
+    modalArt.innerHTML = bustSvg(c);
+    modalStars.textContent = '★'.repeat(c.rarity);
+    modalTitle.textContent = c.name;
+    modalMeta.innerHTML =
+      '<span class="modal-tag">' + c.title + '</span>' +
+      '<span class="modal-tag">' + elNames[c.element] + '</span>' +
+      '<span class="modal-tag">' + c.rarity + '★</span>';
+    modalLore.textContent = c.lore;
+
+    backdrop.classList.add('is-open');
+    backdrop.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    requestAnimationFrame(function() { modalClose.focus(); });
+  }
+
+  function closeModal() {
+    backdrop.classList.remove('is-open');
+    backdrop.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (lastFocused && typeof lastFocused.focus === 'function') {
+      setTimeout(function() { lastFocused.focus(); }, 50);
+    }
+  }
+
+  charsGrid.addEventListener('click', function(e) {
+    const card = e.target.closest('.char-card');
+    if (!card) return;
+    openModal(parseInt(card.dataset.idx, 10));
+  });
+
+  modalClose.addEventListener('click', closeModal);
+
+  backdrop.addEventListener('click', function(e) {
+    if (e.target === backdrop) closeModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && backdrop.classList.contains('is-open')) {
+      closeModal();
+    }
+    if (e.key === 'Tab' && backdrop.classList.contains('is-open')) {
+      const focusables = modal.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])');
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  });
+
+  // ===== ТАЙМЕР ОБРАТНОГО ОТСЧЁТА =====
+  const targetDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+  targetDate.setHours(18, 0, 0, 0);
+
+  const cdDays = document.getElementById('cd-days');
+  const cdHours = document.getElementById('cd-hours');
+  const cdMinutes = document.getElementById('cd-minutes');
+  const cdSeconds = document.getElementById('cd-seconds');
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function updateCountdown() {
+    const now = Date.now();
+    let diff = targetDate.getTime() - now;
+    if (diff < 0) diff = 0;
+
+    cdDays.textContent = pad(Math.floor(diff / (1000 * 60 * 60 * 24)));
+    cdHours.textContent = pad(Math.floor((diff / (1000 * 60 * 60)) % 24));
+    cdMinutes.textContent = pad(Math.floor((diff / (1000 * 60)) % 60));
+    cdSeconds.textContent = pad(Math.floor((diff / 1000) % 60));
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // ===== КНОПКА «НАВЕРХ» =====
+  const scrollTopBtn = document.getElementById('scrollTop');
+  let scrollTicking = false;
+
+  function onScroll() {
+    if (!scrollTicking) {
+      requestAnimationFrame(function() {
+        if (window.scrollY > 400) {
+          scrollTopBtn.classList.add('is-visible');
+        } else {
+          scrollTopBtn.classList.remove('is-visible');
+        }
+        scrollTicking = false;
+      });
+      scrollTicking = true;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  scrollTopBtn.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ===== SMOOTH SCROLL для якорей =====
+  document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      const href = a.getAttribute('href');
+      if (href === '#' || href.length < 2) return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Project Miku: restart — аниме-MMORPG с честной гача-механикой. Редкость не влияет на силу.">
+<title>Project Miku: restart — Перерождение легенды</title>
+<style>
+  :root {
+    --bg-mint: #e8f5e9;
+    --bg-sky: #e3f2fd;
+    --bg-parchment: #fdf6e3;
+    --bg-earth: #efebe0;
+    --bg-rose: #fde4ec;
+    --accent-gold: #e0a838;
+    --accent-pink: #f4a6c0;
+    --accent-sky: #4fb8c9;
+    --accent-mint: #8fc9a3;
+    --text-main: #2a2a3a;
+    --text-muted: #3d3d4f;
+    --text-soft: #5c5c70;
+    --glass-bg: rgba(255, 255, 255, 0.55);
+    --glass-bg-strong: rgba(255, 255, 255, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.8);
+    --shadow-soft: 0 8px 32px rgba(90, 110, 140, 0.12);
+    --shadow-hover: 0 16px 48px rgba(90, 110, 140, 0.22);
+    --radius-sm: 12px;
+    --radius-md: 20px;
+    --radius-lg: 28px;
+    --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--text-main);
+    background:
+      radial-gradient(ellipse at 15% 10%, #fce4ec 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 20%, #e3f2fd 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 90%, #e8f5e9 0%, transparent 55%),
+      linear-gradient(180deg, #fdf6e3 0%, #f5f1e6 100%);
+    background-attachment: fixed;
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  img, svg { max-width: 100%; display: block; }
+
+  :focus-visible {
+    outline: 3px solid var(--accent-gold);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 4vw, 32px);
+  }
+
+  /* ===== HEADER ===== */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 2px 16px rgba(90, 110, 140, 0.06);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    font-size: clamp(1rem, 2.2vw, 1.25rem);
+    letter-spacing: 0.3px;
+  }
+
+  .logo-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-gold) 60%, var(--accent-sky) 100%);
+    display: grid;
+    place-items: center;
+    font-size: 1.25rem;
+    box-shadow: 0 4px 12px rgba(244, 166, 192, 0.4);
+    animation: logoPulse 4s ease-in-out infinite;
+  }
+
+  @keyframes logoPulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 4px 12px rgba(244, 166, 192, 0.4); }
+    50% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(224, 168, 56, 0.5); }
+  }
+
+  .logo-text {
+    background: linear-gradient(90deg, var(--text-main), #4fb8c9);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .main-nav {
+    display: flex;
+    gap: clamp(8px, 2vw, 24px);
+    align-items: center;
+  }
+
+  .nav-link {
+    font-size: clamp(0.85rem, 1.4vw, 0.95rem);
+    font-weight: 500;
+    color: var(--text-muted);
+    padding: 8px 4px;
+    position: relative;
+    transition: color var(--transition);
+    white-space: nowrap;
+  }
+
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-pink), var(--accent-gold));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition);
+  }
+
+  .nav-link:hover, .nav-link:focus-visible {
+    color: var(--text-main);
+  }
+
+  .nav-link:hover::after, .nav-link:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all var(--transition);
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent-pink) 0%, #e88fb0 100%);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(244, 166, 192, 0.4);
+  }
+
+  .btn-primary:hover, .btn-primary:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(244, 166, 192, 0.55);
+  }
+
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-ghost {
+    background: var(--glass-bg);
+    color: var(--text-main);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+  }
+
+  .btn-ghost:hover, .btn-ghost:focus-visible {
+    background: var(--glass-bg-strong);
+    transform: translateY(-2px);
+  }
+
+  .btn-lg {
+    padding: 16px 36px;
+    font-size: 1.05rem;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    position: relative;
+    padding: clamp(40px, 8vh, 90px) 0 clamp(60px, 10vh, 120px);
+    overflow: hidden;
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .hero-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(244, 166, 192, 0.25) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(79, 184, 201, 0.22) 0%, transparent 45%),
+      radial-gradient(circle at 50% 100%, rgba(143, 201, 163, 0.2) 0%, transparent 50%);
+  }
+
+  .petal {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: radial-gradient(circle at 30% 30%, #ffd1e0, #f4a6c0);
+    border-radius: 150% 0 150% 0;
+    opacity: 0.7;
+    animation: petalFall linear infinite;
+    filter: blur(0.3px);
+  }
+
+  @keyframes petalFall {
+    0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.8; }
+    100% { transform: translateY(110vh) translateX(80px) rotate(720deg); opacity: 0; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 880px;
+    margin: 0 auto;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    backdrop-filter: blur(10px);
+    margin-bottom: 24px;
+  }
+
+  .hero-badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-mint);
+    box-shadow: 0 0 0 4px rgba(143, 201, 163, 0.3);
+    animation: dotPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes dotPulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(143, 201, 163, 0.3); }
+    50% { box-shadow: 0 0 0 8px rgba(143, 201, 163, 0.1); }
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #2a2a3a 0%, #4fb8c9 50%, #e0a838 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .countdown {
+    display: flex;
+    justify-content: center;
+    gap: clamp(8px, 2vw, 20px);
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+
+  .countdown-item {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: var(--radius-md);
+    padding: clamp(12px, 2vw, 20px) clamp(16px, 3vw, 28px);
+    min-width: clamp(70px, 14vw, 110px);
+    box-shadow: var(--shadow-soft);
+    transition: transform var(--transition);
+  }
+
+  .countdown-item:hover { transform: translateY(-4px); }
+
+  .countdown-value {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    background: linear-gradient(135deg, var(--accent-gold), #c47a9a);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .countdown-label {
+    font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+    color: var(--text-soft);
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* ===== SECTIONS ===== */
+  section {
+    padding: clamp(60px, 10vh, 100px) 0;
+    position: relative;
+  }
+
+  .section-head {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto clamp(32px, 6vh, 56px);
+  }
+
+  .section-kicker {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent-gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+    color: var(--text-main);
+  }
+
+  .section-lead {
+    font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+    color: var(--text-muted);
+  }
+
+  /* ===== ABOUT / LORE ===== */
+  .about {
+    background: linear-gradient(180deg, transparent 0%, rgba(232, 245, 233, 0.4) 50%, transparent 100%);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .about-grid { grid-template-columns: 1.1fr 1fr; gap: 56px; }
+  }
+
+  .about-text p {
+    font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+    color: var(--text-muted);
+    margin-bottom: 18px;
+  }
+
+  .about-text p:last-child { margin-bottom: 0; }
+
+  .usp-card {
+    background: var(--glass-bg-strong);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: clamp(24px, 4vw, 36px);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .usp-card::before {
+    content: "";
+    position: absolute;
+    top: -50%; right: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(224, 168, 56, 0.15) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .usp-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, var(--accent-gold), #e8c97a);
+    display: grid;
+    place-items: center;
+    font-size: 1.75rem;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 24px rgba(224, 168, 56, 0.3);
+  }
+
+  .usp-title {
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text-main);
+  }
+
+  .usp-text {
+    color: var(--text-muted);
+    font-size: 0.98rem;
+  }
+
+  .classes-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .class-chip {
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(224, 168, 56, 0.3);
+    border-radius: 999px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* ===== CHARACTERS ===== */
+  .characters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: clamp(16px, 2vw, 24px);
+  }
+
+  .char-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 24px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .char-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.4) 100%);
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+
+  .char-card.rarity-ssr { border-color: #e0a838; }
+  .char-card.rarity-sr { border-color: #a98ee0; }
+  .char-card.rarity-r { border-color: #9aa0a6; }
+
+  .char-card:hover, .char-card:focus-visible {
+    transform: perspective(800px) rotateX(2deg);
+  }
+
+  .char-card.rarity-ssr:hover, .char-card.rarity-ssr:focus-visible {
+    box-shadow: 0 16px 40px rgba(224, 168, 56, 0.35);
+  }
+
+  .char-card.rarity-sr:hover, .char-card.rarity-sr:focus-visible {
+    box-shadow: 0 16px 40px rgba(169, 142, 224, 0.35);
+  }
+
+  .char-card.rarity-r:hover, .char-card.rarity-r:focus-visible {
+    box-shadow: 0 16px 40px rgba(154, 160, 166, 0.35);
+  }
+
+  .char-card:hover::before, .char-card:focus-visible::before { opacity: 1; }
+
+  .char-avatar {
+    width: clamp(90px, 18vw, 120px);
+    height: clamp(90px, 18vw, 120px);
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    display: grid;
+    place-items: center;
+    font-size: clamp(2.25rem, 5vw, 3rem);
+    position: relative;
+    box-shadow: 0 8px 24px rgba(90, 110, 140, 0.15);
+    transition: transform var(--transition);
+  }
+
+  .char-card:hover .char-avatar { transform: scale(1.05) rotate(-3deg); }
+
+  .char-avatar::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px dashed rgba(255, 255, 255, 0.6);
+    animation: rotate 20s linear infinite;
+  }
+
+  @keyframes rotate {
+    to { transform: rotate(360deg); }
+  }
+
+  .char-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text-main);
+  }
+
+  .char-class {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    margin-bottom: 10px;
+  }
+
+  .char-rarity {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .rarity-ssr { background: linear-gradient(135deg, #ffe9a8, #f4c97a); color: #7a5a1a; }
+  .rarity-sr { background: linear-gradient(135deg, #d4c4f5, #a98ee0); color: #4a3a7a; }
+  .rarity-r { background: linear-gradient(135deg, #c4e4f5, #8eb8d9); color: #2a5a7a; }
+
+  /* ===== LOCATIONS ===== */
+  .locations {
+    background: linear-gradient(180deg, transparent 0%, rgba(227, 242, 253, 0.35) 50%, transparent 100%);
+  }
+
+  .locations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: clamp(16px, 2vw, 24px);
+  }
+
+  .location-card {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all var(--transition);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .location-card:hover, .location-card:focus-visible {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .location-visual {
+    height: 180px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .location-info {
+    padding: 20px 22px 24px;
+  }
+
+  .location-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-main);
+  }
+
+  .location-desc {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* Location backgrounds */
+  .loc-grove {
+    background:
+      radial-gradient(circle at 30% 80%, #c8e6c9 0%, transparent 50%),
+      radial-gradient(circle at 70% 30%, #fff9c4 0%, transparent 40%),
+      linear-gradient(180deg, #e8f5e9 0%, #dcedc8 60%, #c5e1a5 100%);
+  }
+  .loc-grove::before {
+    content: "🌳";
+    position: absolute;
+    bottom: 10px; left: 20px;
+    font-size: 3rem;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+  }
+  .loc-grove::after {
+    content: "🌿";
+    position: absolute;
+    bottom: 15px; right: 25px;
+    font-size: 2rem;
+    opacity: 0.8;
+  }
+
+  .loc-sky {
+    background:
+      radial-gradient(circle at 80% 20%, #fff59d 0%, transparent 35%),
+      radial-gradient(ellipse at 20% 70%, #ffffff 0%, transparent 40%),
+      linear-gradient(180deg, #bbdefb 0%, #e3f2fd 50%, #fff9c4 100%);
+  }
+  .loc-sky::before {
+    content: "☁️";
+    position: absolute;
+    top: 20px; left: 30px;
+    font-size: 2.5rem;
+    animation: floatCloud 6s ease-in-out infinite;
+  }
+  .loc-sky::after {
+    content: "✨";
+    position: absolute;
+    top: 40px; right: 40px;
+    font-size: 1.5rem;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+
+  @keyframes floatCloud {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(15px); }
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+
+  .loc-ruins {
+    background:
+      radial-gradient(circle at 50% 30%, #ffe082 0%, transparent 45%),
+      linear-gradient(180deg, #ffe0b2 0%, #d7ccc8 50%, #bcaaa4 100%);
+  }
+  .loc-ruins::before {
+    content: "🏛️";
+    position: absolute;
+    bottom: 15px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 3rem;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+  }
+  .loc-ruins::after {
+    content: "🏜️";
+    position: absolute;
+    bottom: 20px; right: 20px;
+    font-size: 1.5rem;
+    opacity: 0.7;
+  }
+
+  .loc-castle {
+    background:
+      radial-gradient(circle at 30% 20%, #f8bbd0 0%, transparent 45%),
+      radial-gradient(circle at 80% 80%, #fff9c4 0%, transparent 40%),
+      linear-gradient(180deg, #fce4ec 0%, #fdf6e3 50%, #f8bbd0 100%);
+  }
+  .loc-castle::before {
+    content: "🏰";
+    position: absolute;
+    bottom: 10px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 3.5rem;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+  }
+  .loc-castle::after {
+    content: "🌸";
+    position: absolute;
+    top: 20px; right: 30px;
+    font-size: 1.75rem;
+    animation: floatCloud 5s ease-in-out infinite;
+  }
+
+  .loc-lake {
+    background:
+      radial-gradient(circle at 50% 100%, #80deea 0%, transparent 50%),
+      radial-gradient(circle at 20% 30%, #c8e6c9 0%, transparent 40%),
+      linear-gradient(180deg, #b3e5fc 0%, #81d4fa 50%, #4fc3f7 100%);
+  }
+  .loc-lake::before {
+    content: "🌊";
+    position: absolute;
+    bottom: 15px; left: 30px;
+    font-size: 2.5rem;
+    animation: wave 4s ease-in-out infinite;
+  }
+  .loc-lake::after {
+    content: "🐟";
+    position: absolute;
+    bottom: 30px; right: 40px;
+    font-size: 1.75rem;
+    animation: wave 3s ease-in-out infinite reverse;
+  }
+
+  @keyframes wave {
+    0%, 100% { transform: translateX(0) translateY(0); }
+    50% { transform: translateX(8px) translateY(-3px); }
+  }
+
+  /* ===== FEATURES ===== */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: clamp(16px, 2vw, 24px);
+  }
+
+  .feature-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: clamp(24px, 3vw, 32px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-soft);
+    transition: all var(--transition);
+    text-align: center;
+  }
+
+  .feature-card:hover, .feature-card:focus-visible {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-hover);
+    background: var(--glass-bg-strong);
+  }
+
+  .feature-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 22px;
+    margin: 0 auto 18px;
+    display: grid;
+    place-items: center;
+    font-size: 2rem;
+    box-shadow: 0 8px 20px rgba(90, 110, 140, 0.15);
+  }
+
+  .icon-gacha { background: linear-gradient(135deg, #ffe082, #ffb74d); }
+  .icon-world { background: linear-gradient(135deg, #b3e5fc, #81d4fa); }
+  .icon-guild { background: linear-gradient(135deg, #f8bbd0, #f48fb1); }
+  .icon-pvp { background: linear-gradient(135deg, #c5e1a5, #aed581); }
+
+  .feature-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-main);
+  }
+
+  .feature-text {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  /* ===== FOOTER ===== */
+  .site-footer {
+    background: linear-gradient(180deg, transparent 0%, rgba(42, 42, 58, 0.05) 100%);
+    padding: clamp(40px, 6vh, 60px) 0 30px;
+    border-top: 1px solid var(--glass-border);
+    margin-top: 40px;
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .footer-link {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    transition: color var(--transition);
+  }
+
+  .footer-link:hover, .footer-link:focus-visible { color: var(--text-main); }
+
+  .footer-copy {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    padding-top: 20px;
+    border-top: 1px solid var(--glass-border);
+  }
+
+  .footer-disclaimer {
+    font-style: italic;
+    margin-top: 8px;
+    font-size: 0.8rem;
+  }
+
+  /* ===== MODAL ===== */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(42, 42, 58, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 200;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .modal-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .modal {
+    background: linear-gradient(180deg, #fff 0%, #fdf6e3 100%);
+    border-radius: var(--radius-lg);
+    max-width: 560px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: clamp(24px, 4vw, 36px);
+    position: relative;
+    box-shadow: 0 24px 64px rgba(42, 42, 58, 0.3);
+    transform: scale(0.92) translateY(20px);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .modal-backdrop.is-open .modal {
+    transform: scale(1) translateY(0);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    display: grid;
+    place-items: center;
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    transition: all var(--transition);
+    border: 1px solid var(--glass-border);
+  }
+
+  .modal-close:hover, .modal-close:focus-visible {
+    background: var(--accent-pink);
+    color: #fff;
+    transform: rotate(90deg);
+  }
+
+  .modal-avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    display: grid;
+    place-items: center;
+    font-size: 4rem;
+    box-shadow: 0 12px 32px rgba(90, 110, 140, 0.2);
+    position: relative;
+  }
+
+  .modal-avatar::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 2px dashed rgba(224, 168, 56, 0.5);
+    animation: rotate 15s linear infinite;
+  }
+
+  .modal-name {
+    font-size: clamp(1.5rem, 3vw, 1.85rem);
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 6px;
+    color: var(--text-main);
+  }
+
+  .modal-meta {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .modal-tag {
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--glass-border);
+    color: var(--text-muted);
+  }
+
+  .modal-lore {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: 18px 20px;
+    margin-bottom: 18px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .modal-disclaimer {
+    background: linear-gradient(135deg, rgba(224, 168, 56, 0.1), rgba(244, 166, 192, 0.1));
+    border-left: 3px solid var(--accent-gold);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  .modal-disclaimer strong { color: var(--text-main); }
+
+  /* ===== SCROLL TOP ===== */
+  .scroll-top {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-pink), var(--accent-gold));
+    color: #fff;
+    font-size: 1.4rem;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 8px 24px rgba(244, 166, 192, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+    transition: all var(--transition);
+    z-index: 50;
+  }
+
+  .scroll-top.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .scroll-top:hover, .scroll-top:focus-visible {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(244, 166, 192, 0.55);
+  }
+
+  /* ===== REDUCED MOTION ===== */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    html { scroll-behavior: auto; }
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width: 720px) {
+    .main-nav .nav-link { display: none; }
+    .header-inner { padding: 12px 0; }
+    .logo-mark { width: 36px; height: 36px; font-size: 1.1rem; }
+    .hero { min-height: auto; padding: 40px 0 60px; }
+    .countdown-item { min-width: 70px; padding: 12px 14px; }
+    .scroll-top { width: 46px; height: 46px; bottom: 16px; right: 16px; }
+  }
+
+  @media (max-width: 420px) {
+    .btn-lg { padding: 14px 24px; font-size: 0.95rem; }
+    .hero-cta { flex-direction: column; width: 100%; }
+    .hero-cta .btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <div class="container header-inner">
+    <a href="#top" class="logo" aria-label="Project Miku: restart — на главную">
+      <span class="logo-mark" aria-hidden="true">✦</span>
+      <span class="logo-text">Project Miku: restart</span>
+    </a>
+    <nav class="main-nav" aria-label="Основная навигация">
+      <a href="#about" class="nav-link">О мире</a>
+      <a href="#characters" class="nav-link">Персонажи</a>
+      <a href="#locations" class="nav-link">Локации</a>
+      <a href="#features" class="nav-link">Особенности</a>
+      <a href="#register" class="btn btn-primary">Войти</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-bg" aria-hidden="true" id="petalsContainer"></div>
+    <div class="container hero-content">
+      <div class="hero-badge">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Открытый бета-тест скоро</span>
+      </div>
+      <h1 class="hero-title" id="hero-title">Перерождение легенды.<br>Честная гача. Твой мир.</h1>
+      <p class="hero-subtitle">Аниме-MMORPG, в которой редкость персонажа — это лишь визуальный стиль. Сила зависит от мастерства, стратегии и друзей, с которыми ты идёшь в бой.</p>
+
+      <div class="countdown" role="timer" aria-live="polite" aria-atomic="true" aria-label="Обратный отсчёт до начала ОБТ">
+        <div class="countdown-item">
+          <div class="countdown-value" id="cd-days">00</div>
+          <div class="countdown-label">Дней</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-value" id="cd-hours">00</div>
+          <div class="countdown-label">Часов</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-value" id="cd-minutes">00</div>
+          <div class="countdown-label">Минут</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-value" id="cd-seconds">00</div>
+          <div class="countdown-label">Секунд</div>
+        </div>
+      </div>
+
+      <div class="hero-cta">
+        <a href="#register" class="btn btn-primary btn-lg" id="register">Зарегистрироваться на ОБТ</a>
+        <a href="#about" class="btn btn-ghost btn-lg">Узнать больше</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about" aria-labelledby="about-title">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-kicker">Мир игры</span>
+        <h2 class="section-title" id="about-title">Там, где древняя магия встречает технологии</h2>
+        <p class="section-lead">Эпоха, в которой руны высекаются на стальных клинках, а заклинания плетутся из света звёзд. Добро пожаловать в Этерию — мир, помнящий каждого героя.</p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-text">
+          <p>Тысячу лет назад Великий Разлом разделил Этерию на осколки, но магия не исчезла — она переплелась с механизмами, кристаллами и самими душами людей. Сегодня рощи шепчут древние заклинания, а небесные острова удерживают парящие замки магов-инженеров.</p>
+          <p>В «Project Miku: restart» ты не просто выбираешь класс — ты становишься частью живой истории. Гильдии сражаются за контроль над руинами, археологи поднимают забытые артефакты, а барды слагают баллады о твоих подвигах, которые услышит весь сервер.</p>
+          <p>Двенадцать уникальных классов, сотни квестов с ветвящимися сюжетami и мир, который меняется в зависимости от действий сообщества. Здесь каждый находит своё приключение.</p>
+          <div class="classes-list" aria-label="Список классов">
+            <span class="class-chip">Маг</span>
+            <span class="class-chip">Воин</span>
+            <span class="class-chip">Хранитель рощи</span>
+            <span class="class-chip">Самурай</span>
+            <span class="class-chip">Бард</span>
+            <span class="class-chip">Стражник сезонов</span>
+            <span class="class-chip">Археолог</span>
+            <span class="class-chip">Повелитель пауков</span>
+            <span class="class-chip">Котовод</span>
+            <span class="class-chip">Коневод</span>
+            <span class="class-chip">Зонтик</span>
+            <span class="class-chip">Кулак ярости</span>
+          </div>
+        </div>
+
+        <aside class="usp-card" aria-label="Главное преимущество">
+          <div class="usp-icon" aria-hidden="true">⚖️</div>
+          <h3 class="usp-title">Редкость — это стиль, а не сила</h3>
+          <p class="usp-text">В «Project Miku: restart» нет pay-to-win. SSR-персонаж выглядит эффектно при призыве и сияет уникальной аурой, но в бою он ровно настолько же силён, как и его R-собрат. Побеждает мастерство, стратегия и слаженная команда.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHARACTERS -->
+  <section id="characters" aria-labelledby="chars-title">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-kicker">Герои Этерии</span>
+        <h2 class="section-title" id="chars-title">Выбери того, чья история отзовётся в твоём сердце</h2>
+        <p class="section-lead">Восемь стартовых героев — у каждого свой путь, своя стихия и своя легенда. Нажми на карточку, чтобы узнать больше.</p>
+      </div>
+
+      <div class="characters-grid" id="charsGrid">
+        <!-- Карточки вставляются JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATIONS -->
+  <section class="locations" id="locations" aria-labelledby="loc-title">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-kicker">Локации</span>
+        <h2 class="section-title" id="loc-title">Пять миров — одна Этерия</h2>
+        <p class="section-lead">От тихих рощ до парящих островов — каждый уголок мира хранит свои тайны и опасности.</p>
+      </div>
+
+      <div class="locations-grid">
+        <article class="location-card" tabindex="0">
+          <div class="location-visual loc-grove" aria-hidden="true"></div>
+          <div class="location-info">
+            <h3 class="location-name">Тихая роща</h3>
+            <p class="location-desc">Стартовая долина, где солнце пробивается сквозь листву вековых дубов, а первые шаги героя сопровождаются шёпотом древних духов.</p>
+          </div>
+        </article>
+
+        <article class="location-card" tabindex="0">
+          <div class="location-visual loc-sky" aria-hidden="true"></div>
+          <div class="location-info">
+            <h3 class="location-name">Небесные острова</h3>
+            <p class="location-desc">Парящие среди облаков архипелаги с высокоуровневыми данжами, где золото ветра смешивается с блеском древних реликвий.</p>
+          </div>
+        </article>
+
+        <article class="location-card" tabindex="0">
+          <div class="location-visual loc-ruins" aria-hidden="true"></div>
+          <div class="location-info">
+            <h3 class="location-name">Песчаные руины</h3>
+            <p class="location-desc">Безжалостная PvP-зона, где под зноем пустыни скрываются разломы в иные миры и древние арены забытых империй.</p>
+          </div>
+        </article>
+
+        <article class="location-card" tabindex="0">
+          <div class="location-visual loc-castle" aria-hidden="true"></div>
+          <div class="location-info">
+            <h3 class="location-name">Замок Зари</h3>
+            <p class="location-desc">Столица Этерии — бело-розовый город, где рассветные лучи играют на шпилях, а гильдии собираются перед великими походами.</p>
+          </div>
+        </article>
+
+        <article class="location-card" tabindex="0">
+          <div class="location-visual loc-lake" aria-hidden="true"></div>
+          <div class="location-info">
+            <h3 class="location-name">Озеро Отражений</h3>
+            <p class="location-desc">Тихая вода, в которой видно не только твоё лицо, но и воспоминания — идеальное место для рыбалки, медитации и разговоров по душам.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" aria-labelledby="feat-title">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-kicker">Почему стоит остаться</span>
+        <h2 class="section-title" id="feat-title">Игра, в которую хочется возвращаться</h2>
+        <p class="section-lead">Мы создали «Project Miku: restart» для тех, кто устал от доминирования кошелька над мастерством.</p>
+      </div>
+
+      <div class="features-grid">
+        <article class="feature-card">
+          <div class="feature-icon icon-gacha" aria-hidden="true">🎯</div>
+          <h3 class="feature-title">Честная гача</h3>
+          <p class="feature-text">Прозрачные шансы, гарантированные награды и никакой оплаты за силу. Редкость — это косметика, а не преимущество.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon icon-world" aria-hidden="true">🗺️</div>
+          <h3 class="feature-title">Бесшовный мир</h3>
+          <p class="feature-text">Пять уникальных регионов без загрузочных экранов. Путешествуй от рощ до небесных островов, не прерывая приключения.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon icon-guild" aria-hidden="true">🏰</div>
+          <h3 class="feature-title">Гильдии и осады</h3>
+          <p class="feature-text">Создавай гильдию, стройте крепость, защищайте её в еженедельных осадах. История сервера пишется вашими руками.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon icon-pvp" aria-hidden="true">⚔️</div>
+          <h3 class="feature-title">PvP без pay-to-win</h3>
+          <p class="feature-text">Арена, battleground'ы и открытые PvP-зоны, где побеждает скилл. Никаких «золотых мечей» — только тактика и реакция.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="logo">
+        <span class="logo-mark" aria-hidden="true">✦</span>
+        <span class="logo-text">Project Miku: restart</span>
+      </div>
+      <nav class="footer-links" aria-label="Ссылки в подвале">
+        <a href="#" class="footer-link">Discord</a>
+        <a href="#" class="footer-link">Новости</a>
+        <a href="#" class="footer-link">Поддержка</a>
+        <a href="#" class="footer-link">Правила</a>
+      </nav>
+    </div>
+    <div class="footer-copy">
+      <div>© 2026 Project Miku: restart. Все права вымышлены.</div>
+      <div class="footer-disclaimer">Демонстрационный проект. Все права вымышлены.</div>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modalClose" aria-label="Закрыть окно">✕</button>
+    <div class="modal-avatar" id="modalAvatar" aria-hidden="true"></div>
+    <h3 class="modal-name" id="modal-title"></h3>
+    <div class="modal-meta" id="modalMeta"></div>
+    <div class="modal-lore" id="modalLore"></div>
+    <div class="modal-disclaimer">
+      <strong>Важно:</strong> <span id="modalDisclaimer">Редкость SSR влияет только на уникальную анимацию призыва и визуальный эффект ауры. Боевая статистика сбалансирована.</span>
+    </div>
+  </div>
+</div>
+
+<!-- SCROLL TOP -->
+<button class="scroll-top" id="scrollTop" aria-label="Вернуться наверх">↑</button>
+
+<script>
+(function() {
+  'use strict';
+
+  // ===== ДАННЫЕ ПЕРСОНАЖЕЙ =====
+  const characters = [
+    {
+      name: 'Лираэль',
+      cls: 'Маг',
+      role: 'ДД',
+      rarity: 'SSR',
+      emoji: '🔮',
+      gradient: 'linear-gradient(135deg, #c4b5fd 0%, #a78bfa 50%, #f0abfc 100%)',
+      lore: 'Последняя ученица Звёздной Академии, Лираэль плетёт заклинания из света созвездий. Говорят, она может прочитать судьбу в отражении лунного диска.'
+    },
+    {
+      name: 'Айрис',
+      cls: 'Воин',
+      role: 'Танк',
+      rarity: 'SR',
+      emoji: '⚔️',
+      gradient: 'linear-gradient(135deg, #fca5a5 0%, #f87171 50%, #dc2626 100%)',
+      lore: 'Бывшая капитан королевской стражи, Айрис променяла двор на дорогу. Её щит помнит больше битв, чем летописи королевства.'
+    },
+    {
+      name: 'Флора',
+      cls: 'Хранитель рощи',
+      role: 'Саппорт',
+      rarity: 'SSR',
+      emoji: '🌿',
+      gradient: 'linear-gradient(135deg, #86efac 0%, #4ade80 50%, #a7f3d0 100%)',
+      lore: 'Голос древних деревьев, Флора слышит шёпот корней за сотни вёрст. Там, где она ступает, расцветают даже камни.'
+    },
+    {
+      name: 'Акари',
+      cls: 'Самурай',
+      role: 'ДД',
+      rarity: 'SR',
+      emoji: '🌸',
+      gradient: 'linear-gradient(135deg, #fbcfe8 0%, #f9a8d4 50%, #f472b6 100%)',
+      lore: 'Странствующая воительница из восточных провинций. Её катана поёт, когда лепестки сакуры касаются лезвия.'
+    },
+    {
+      name: 'Мяу',
+      cls: 'Котовод',
+      role: 'Контроль',
+      rarity: 'R',
+      emoji: '🐱',
+      gradient: 'linear-gradient(135deg, #fed7aa 0%, #fdba74 50%, #fcd34d 100%)',
+      lore: 'Маленькая волшебница, которую всюду сопровождает свита из двенадцати говорящих котов. Каждый из них — отдельная стихия.'
+    },
+    {
+      name: 'Сора',
+      cls: 'Зонтик',
+      role: 'Саппорт',
+      rarity: 'SR',
+      emoji: '☂️',
+      gradient: 'linear-gradient(135deg, #bae6fd 0%, #7dd3fc 50%, #c7d2fe 100%)',
+      lore: 'Таинственный странник с волшебным зонтом, который укрывает не только от дождя, но и от злых чар. Его прошлое окутано туманом.'
+    },
+    {
+      name: 'Рен',
+      cls: 'Кулак ярости',
+      role: 'ДД',
+      rarity: 'R',
+      emoji: '👊',
+      gradient: 'linear-gradient(135deg, #fecaca 0%, #fca5a5 50%, #fdba74 100%)',
+      lore: 'Бывший монах Огненного Храма, Рен превратил гнев в искусство. Один его удар способен расколоть надвое гранитную глыбу.'
+    },
+    {
+      name: 'Арахна',
+      cls: 'Повелитель пауков',
+      role: 'Контроль',
+      rarity: 'SSR',
+      emoji: '🕷️',
+      gradient: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 50%, #4c1d95 100%)',
+      lore: 'Последняя из рода Тенёвых прях, Арахна плетёт сети не только из шёлка, но и из самих судеб. Её паутину не видит даже ветер.'
+    }
+  ];
+
+  // ===== РЕНДЕР КАРТОЧЕК ПЕРСОНАЖЕЙ =====
+  const charsGrid = document.getElementById('charsGrid');
+  const rarityLabels = { SSR: 'SSR', SR: 'SR', R: 'R' };
+  const rarityClass = { SSR: 'rarity-ssr', SR: 'rarity-sr', R: 'rarity-r' };
+
+  characters.forEach((c, idx) => {
+    const card = document.createElement('button');
+    card.className = 'char-card ' + rarityClass[c.rarity];
+    card.type = 'button';
+    card.setAttribute('aria-label', `${c.name}, ${c.cls}, ${c.role}, редкость ${c.rarity}. Подробнее`);
+    card.dataset.idx = idx;
+    card.innerHTML = `
+      <div class="char-avatar" style="background: ${c.gradient}" aria-hidden="true">
+        <span>${c.emoji}</span>
+      </div>
+      <div class="char-name">${c.name}</div>
+      <div class="char-class">${c.cls} · ${c.role}</div>
+      <span class="char-rarity ${rarityClass[c.rarity]}">${rarityLabels[c.rarity]}</span>
+    `;
+    charsGrid.appendChild(card);
+  });
+
+  // ===== МОДАЛЬНОЕ ОКНО =====
+  const backdrop = document.getElementById('modalBackdrop');
+  const modal = document.getElementById('modal');
+  const modalClose = document.getElementById('modalClose');
+  const modalAvatar = document.getElementById('modalAvatar');
+  const modalTitle = document.getElementById('modal-title');
+  const modalMeta = document.getElementById('modalMeta');
+  const modalLore = document.getElementById('modalLore');
+  const modalDisclaimer = document.getElementById('modalDisclaimer');
+
+  let lastFocused = null;
+
+  function openModal(idx) {
+    const c = characters[idx];
+    if (!c) return;
+    lastFocused = document.activeElement;
+
+    modalAvatar.style.background = c.gradient;
+    modalAvatar.innerHTML = `<span>${c.emoji}</span>`;
+    modalTitle.textContent = c.name;
+    modalMeta.innerHTML = `
+      <span class="modal-tag">${c.cls}</span>
+      <span class="modal-tag">Роль: ${c.role}</span>
+      <span class="char-rarity ${rarityClass[c.rarity]}">${rarityLabels[c.rarity]}</span>
+    `;
+    modalLore.textContent = c.lore;
+    modalDisclaimer.textContent = `Редкость ${c.rarity} влияет только на уникальную анимацию призыва и визуальный эффект ауры. Боевая статистика сбалансирована.`;
+
+    backdrop.classList.add('is-open');
+    backdrop.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    requestAnimationFrame(() => {
+      modalClose.focus();
+    });
+  }
+
+  function closeModal() {
+    backdrop.classList.remove('is-open');
+    backdrop.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (lastFocused && typeof lastFocused.focus === 'function') {
+      setTimeout(() => lastFocused.focus(), 50);
+    }
+  }
+
+  charsGrid.addEventListener('click', (e) => {
+    const card = e.target.closest('.char-card');
+    if (!card) return;
+    openModal(parseInt(card.dataset.idx, 10));
+  });
+
+  modalClose.addEventListener('click', closeModal);
+
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop) closeModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && backdrop.classList.contains('is-open')) {
+      closeModal();
+    }
+    // Focus trap
+    if (e.key === 'Tab' && backdrop.classList.contains('is-open')) {
+      const focusables = modal.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])');
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  });
+
+  // ===== ТАЙМЕР ОБРАТНОГО ОТСЧЁТА =====
+  // Цель: +30 дней от текущей даты (17 октября 2026) = 16 ноября 2026, 18:00
+  const targetDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+  targetDate.setHours(18, 0, 0, 0);
+
+  const cdDays = document.getElementById('cd-days');
+  const cdHours = document.getElementById('cd-hours');
+  const cdMinutes = document.getElementById('cd-minutes');
+  const cdSeconds = document.getElementById('cd-seconds');
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function updateCountdown() {
+    const now = Date.now();
+    let diff = targetDate.getTime() - now;
+    if (diff < 0) diff = 0;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    cdDays.textContent = pad(days);
+    cdHours.textContent = pad(hours);
+    cdMinutes.textContent = pad(minutes);
+    cdSeconds.textContent = pad(seconds);
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // ===== КНОПКА «НАВЕРХ» =====
+  const scrollTopBtn = document.getElementById('scrollTop');
+  let scrollTicking = false;
+
+  function onScroll() {
+    if (!scrollTicking) {
+      requestAnimationFrame(() => {
+        if (window.scrollY > 400) {
+          scrollTopBtn.classList.add('is-visible');
+        } else {
+          scrollTopBtn.classList.remove('is-visible');
+        }
+        scrollTicking = false;
+      });
+      scrollTicking = true;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ===== ЛЕПЕСТКИ САКУРЫ В HERO =====
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!prefersReduced) {
+    const petalsContainer = document.getElementById('petalsContainer');
+    const petalCount = window.innerWidth < 720 ? 10 : 18;
+    for (let i = 0; i < petalCount; i++) {
+      const p = document.createElement('span');
+      p.className = 'petal';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDuration = (8 + Math.random() * 10) + 's';
+      p.style.animationDelay = (Math.random() * 10) + 's';
+      p.style.opacity = (0.4 + Math.random() * 0.4).toFixed(2);
+      const size = 10 + Math.random() * 10;
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      petalsContainer.appendChild(p);
+    }
+  }
+
+  // ===== SMOOTH SCROLL для якорей (доп. подстраховка) =====
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const href = a.getAttribute('href');
+      if (href === '#' || href.length < 2) return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>
