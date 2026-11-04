@@ -1,0 +1,60 @@
+name: Deploy static site
+
+# Триггер: автоматический запуск при push в ветку main,
+# а также возможность ручного запуска (workflow_dispatch)
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+# Права, необходимые workflow для публикации на GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Параллельные запуски не нужны: новое развертывание отменяет предыдущее
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  # Индивидуальный проект: шаг проверки HTML-разметки перед публикацией
+  quality:
+    name: Check HTML markup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate HTML files
+        run: node scripts/check-html.js
+
+  # Основное задание: сборка и деплой статического сайта на GitHub Pages
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: quality
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
