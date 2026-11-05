@@ -529,6 +529,14 @@
 
   .art-inner svg, .art-inner img, .art-inner video { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+  /* Видеоролик в hero: слегка увеличиваем и смещаем так,
+     чтобы надпись в левом нижнем углу исходного видео
+     оставалась за пределами окна (обрезается overflow: hidden) */
+  .art-inner video {
+    transform: scale(1.4);
+    transform-origin: 85% 10%;
+  }
+
   @keyframes floaty {
     0%, 100% { transform: translateY(0) rotate(-1deg); }
     50% { transform: translateY(-14px) rotate(1deg); }
