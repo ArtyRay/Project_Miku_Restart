@@ -724,7 +724,8 @@
 
   .char-art-wrap {
     position: relative;
-    height: 250px;
+    height: auto;
+    aspect-ratio: 2 / 3;
     overflow: hidden;
     background:
       radial-gradient(ellipse at 50% 32%, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0) 62%),
@@ -1407,7 +1408,6 @@
     .footer-grid { grid-template-columns: 1fr; gap: 24px; }
     .sticky-cta.is-visible { display: block; }
     .scroll-top { bottom: 88px; }
-    .char-art-wrap { height: 220px; }
   }
 
   @media (max-width: 420px) {
