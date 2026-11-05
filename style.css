@@ -733,6 +733,12 @@
 
   .char-art, .char-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+  /* Полностью вписываем изображение персонажа в рамку (без обрезки) */
+  .char-img {
+    object-fit: contain;
+    object-position: center top;
+  }
+
   .char-stars {
     color: var(--accent, var(--gold));
     letter-spacing: 3px;
