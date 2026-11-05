@@ -740,6 +740,12 @@
     object-position: center top;
   }
 
+  /* Квадратные/широкие арты (например, Мяу) — заполняем рамку целиком, как портретные */
+  .char-img-cover {
+    object-fit: cover;
+    object-position: center;
+  }
+
   .char-stars {
     color: var(--accent, var(--gold));
     letter-spacing: 3px;

@@ -709,7 +709,7 @@
     { name: 'Акари', title: 'Лепесток бури', cls: 'Самурай · ДД', element: 'cryo', rarity: 4, img: 'assets/char-new1.png', elColor: '#7fd4e8',
       colors: { aura: '#7fd4e8', hair: '#f7b8d0', hairLight: '#ffdce8', hairDark: '#d98aa8', skin: '#ffe9d6', eye: '#5fb8d8', eyeLight: '#c4ecf8', eyeDark: '#2a7a9a', outfit: '#fdf2f7', outfitAccent: '#7fd4e8' },
       lore: 'Странствующая воительница из восточных провинций. Её катана поёт, когда лепестки сакуры касаются лезвия.' },
-    { name: 'Мяу', title: 'Двенадцать хвостов', cls: 'Маг · Контроль', element: 'electro', rarity: 4, img: 'assets/char-miau.png', elColor: '#b06fd6',
+    { name: 'Мяу', title: 'Двенадцать хвостов', cls: 'Маг · Контроль', element: 'electro', rarity: 4, img: 'assets/char-miau.png', fit: 'cover', elColor: '#b06fd6',
       colors: { aura: '#b06fd6', hair: '#f0a030', hairLight: '#ffd98a', hairDark: '#c47a1a', skin: '#ffe9d6', eye: '#b06fd6', eyeLight: '#e6c9f5', eyeDark: '#6a2f8f', outfit: '#fff3d6', outfitAccent: '#b06fd6' },
       lore: 'Маленькая волшебница, которую всюду сопровождает свита из двенадцати говорящих котов. Каждый из них — отдельная стихия.' },
     { name: 'Сора', title: 'Странник дождя', cls: 'Зонт · Саппорт', element: 'hydro', rarity: 4, img: 'assets/char-sora.png', elColor: '#3b7dd8',
@@ -727,7 +727,7 @@
   var charsGrid = document.getElementById('charsGrid');
 
   function bustSvg(c) {
-    return '<img class="char-img" src="' + c.img + '" alt="" loading="lazy">';
+    return '<img class="char-img' + (c.fit === 'cover' ? ' char-img-cover' : '') + '" src="' + c.img + '" alt="" loading="lazy">';
   }
 
   characters.forEach(function(c, idx) {
